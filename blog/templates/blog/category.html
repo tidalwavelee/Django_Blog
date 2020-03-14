@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang='en'>
+
+  <head>
+    <title>Blog</title>
+		<meta charset="utf-8">
+  </head>
+
+  <body>
+			{% if category %}
+				<h1>{{ category_name }}</h1>
+
+				{% if articles %}
+				<ul>
+					{% for article in articles %}
+					<li><a href="#">{{article.title}}</a></li>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<strong>There are no articles in current category.</strong>
+				{% endif %}
+
+			{% else %}
+				The specified category {{ category_name }} does not exist!
+			{% endif %}
+  </body>
+
+</html>
