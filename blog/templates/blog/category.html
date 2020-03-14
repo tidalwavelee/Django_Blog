@@ -16,7 +16,7 @@
 				{% if articles %}
 				<ul>
 					{% for article in articles %}
-					<li><a href="#">{{article.title}}</a></li>
+					<li><a href="/blog/{{ category.slug }}/{{ article.slug }}">{{article.title}}</a></li>
 					{% endfor %}
 				</ul>
 				{% else %}

@@ -19,5 +19,6 @@ from blog import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
-    re_path(r'^category/(?P<category_name_slug>[\w\-]+)/$', views.category, name='category')
+    path('<slug:category_slug>/', views.category, name='category'),
+    re_path(r'^([\w\-]+)/(?P<article_slug>[\w\-]+)/$', views.article, name='article'),
 ]

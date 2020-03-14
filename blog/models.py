@@ -8,7 +8,7 @@ class Category(models.Model):
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.name.replace(' ','_'))
         super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -22,6 +22,17 @@ class Article(models.Model):
     publish_date = models.DateField(auto_now_add=True)
     last_updated_time = models.DateTimeField(auto_now=True)
     read = models.IntegerField(default=0)
+    slug = models.SlugField(unique=True,max_length=128)
+
+    def get_unique_slug(self):
+        title_slug = slugify(self.title.replace(' ','_'))
+        date_slug = slugify(self.publish_date)
+        unique_slug = title_slug+'_'+date_slug
+        return unique_slug
+
+    def save(self, *args, **kwargs):
+        self.slug = self.get_unique_slug()
+        super(Article, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title

@@ -8,4 +8,4 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('category','title','author','publish_date','last_updated_time')
+    list_display = ('category','title','author','publish_date','last_updated_time','slug')

@@ -10,11 +10,11 @@ def index(request):
     context['articles'] = article_list
     return render(request, 'blog/index.html',context)
 
-def category(request, category_name_slug):
+def category(request, category_slug):
     context = {}
 
     try:
-        category = Category.objects.get(slug=category_name_slug)
+        category = Category.objects.get(slug=category_slug)
         context['category_name'] = category.name
 
         articles = Article.objects.filter(category=category)
@@ -25,6 +25,18 @@ def category(request, category_name_slug):
         pass
 
     return render(request, 'blog/category.html', context)
+
+def article(request, article_slug):
+    context = {}
+
+    try:
+        article = Article.objects.get(slug=article_slug)
+        context['article'] = article
+
+    except Article.DoesNotExist:
+        pass
+
+    return render(request, 'blog/article.html', context)
 
 def about(request):
     return HttpResponse("opencads is dedicated to open source CAD tools")
