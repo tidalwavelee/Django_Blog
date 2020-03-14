@@ -8,7 +8,7 @@ class Category(models.Model):
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name.replace(' ','_'))
+        self.slug = slugify(self.name.replace('.','_'))
         super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
