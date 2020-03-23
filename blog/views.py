@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render,get_object_or_404
+from django.http import HttpResponse, Http404
 from blog.models import Category,Article
 
 def index(request):
@@ -22,19 +22,15 @@ def category(request, category_slug):
 
         context['category'] = category
     except Category.DoesNotExist:
-        pass
+        raise Http404("Category does not exist")
 
     return render(request, 'blog/category.html', context)
 
 def article(request, article_slug):
     context = {}
 
-    try:
-        article = Article.objects.get(slug=article_slug)
-        context['article'] = article
-
-    except Article.DoesNotExist:
-        pass
+    article = get_object_or_404(Article,slug=article_slug)
+    context['article'] = article
 
     return render(request, 'blog/article.html', context)
 
