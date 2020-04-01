@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse, Http404
 from blog.models import Category,Article
+from blog.forms import CategoryForm
 
 def index(request):
     context = {'boldmessage': "товарищ"}
@@ -36,3 +37,16 @@ def article(request, article_slug):
 
 def about(request):
     return HttpResponse("opencads is dedicated to open source CAD tools")
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return index(request)
+        else:
+            print(form.errors)
+    else:
+        form = CategoryForm()
+
+    return render(request, 'blog/add_category.html', {'form':form})
