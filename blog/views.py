@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse, Http404
 from blog.models import Category,Article
-from blog.forms import CategoryForm
+from blog.forms import CategoryForm,ArticleForm
 
 def index(request):
     context = {'boldmessage': "товарищ"}
@@ -50,3 +50,17 @@ def add_category(request):
         form = CategoryForm()
 
     return render(request, 'blog/add_category.html', {'form':form})
+
+def add_article(request):
+
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            new_article = form.save(commit=True)
+            return article(request,new_article.slug)
+        else:
+            print(form.errors)
+    else:
+        form = ArticleForm()
+
+    return render(request, 'blog/add_article.html', {'form':form})

@@ -16,8 +16,14 @@ class ArticleForm(forms.ModelForm):
     article = forms.CharField(widget=forms.Textarea, help_text="Content")
     publish_date = forms.DateField(initial=datetime.date.today)
     read = forms.IntegerField(widget=forms.HiddenInput(),initial=0)
-    slug = forms.CharField(widget=forms.HiddenInput(),required=False)
 
     class Meta:
         model = Article
         exclude = ('last_updated_time',)
+
+#    def clean(self):
+#        cleaned_data = self.cleaned_data
+#        read = cleaned_data.get('read')
+#        if not read:
+#            cleaned_data['read'] = 0
+#        return cleaned_data

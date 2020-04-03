@@ -20,7 +20,7 @@ app_name = 'blog'
 urlpatterns = [
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
-    path('add_category/', views.add_category, name='add_category'),
+    path('add_article/', views.add_article, name='add_article'),
     path('<slug:category_slug>/', views.category, name='category'),
     re_path(r'^([\w\-]+)/(?P<article_slug>[\w\-]+)/$', views.article, name='article'),
 ]

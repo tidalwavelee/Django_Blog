@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang='en'>
+
+  <head>
+    <title>Blog</title>
+		<meta charset="utf-8">
+  </head>
+
+  <body>
+			<h1>Add an Article</h1>
+			<form id="article_form" method="post" action="{% url 'blog:add_article' %}">
+				{% csrf_token %}
+				{% for hidden in form.hidden_fields %}
+					{{ hidden }}
+				{% endfor %}
+
+				{% for field in form.visible_fields %}
+					{{ field.errors }}
+					{{ field.help_text }}
+					{{ field }}
+				{% endfor %}
+
+				<input type="submit" name="submit" value="Create Article"/>
+			</form>
+  </body>
+
+</html>
