@@ -11,8 +11,19 @@
 
   <body>
       <h2>OpenCADs Blogs</h2>
-      Welcome to the world of OpenCADs <strong>{{ boldmessage }}</strong><br />
+
+			{% if user.is_authenticated %}
+			Welcome back to OpenCAD, <strong>{{user.username}}</strong> !
+			<a href="/blog/logout/">Logout</a><br />
+			{% else %}
+      Welcome to the world of OpenCAD, <strong>{{ boldmessage }}</strong> !
+			<a href="/blog/register/">Register Here</a> or 
+			<a href="/blog/login/">Login</a>
+			{% endif %}
+
+			<br />
       <a href="/blog/about/">About</a><br />
+
 			{% if categories %}
 				<ul>
 					{% for category in categories %}
@@ -23,6 +34,7 @@
 				<strong>There are no categories present.</strong>
 			{% endif %}
 			<a href="/blog/add_article/">Add a New Article</a><br />
+			
 			<img src="{% static "blog/images/galaxy.jpg" %}" alt="My image">
   </body>
 

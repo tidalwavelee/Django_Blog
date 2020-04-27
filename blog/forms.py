@@ -1,5 +1,7 @@
 from django import forms
-from blog.models import Category,Article
+from django.contrib.auth.models import User
+from blog.models import UserProfile
+from blog.models import Category,Article,UserProfile
 import datetime
 
 class CategoryForm(forms.ModelForm):
@@ -27,3 +29,15 @@ class ArticleForm(forms.ModelForm):
 #        if not read:
 #            cleaned_data['read'] = 0
 #        return cleaned_data
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields=('username','email','password')
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('title','website','picture')

@@ -12,12 +12,15 @@ class CategoryAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('category','title','author','publish_date','last_updated_time','slug')
 
+# define an inline admin descriptor for UserProfile model
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     can_delete = False
     verbose_name_plural = 'userprofile'
+# Define a new UserAdmin
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
     
+# Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User,UserAdmin)

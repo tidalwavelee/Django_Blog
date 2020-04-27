@@ -21,6 +21,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
     path('add_article/', views.add_article, name='add_article'),
+    path('register/', views.register, name='register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
     path('<slug:category_slug>/', views.category, name='category'),
     re_path(r'^([\w\-]+)/(?P<article_slug>[\w\-]+)/$', views.article, name='article'),
 ]
