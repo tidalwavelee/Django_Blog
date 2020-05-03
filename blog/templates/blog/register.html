@@ -1,31 +1,26 @@
-<!DOCTYPE html>
+{% extends 'blog/base.html' %}
 
 {% load static %}
 
-<html lang='en'>
+{% block title %}register{% endblock %}
 
-  <head>
-    <title>Blog</title>
-		<meta charset="utf-8">
-  </head>
+{% block body_block %}
 
-  <body>
-			<h1>Register with OpenCAD</h1>
-			{% if registered %}
-			<strong>Thank you for registering!</strong>
-			<a href="/blog/">Return to homepage.</a><br />
-			{% else %}
-			<strong>Register here!</strong><br />
-			<form id="user_form" method="post" action="/blog/register/" enctype="multipart/form-data">
-				{% csrf_token %}
-				<!-- as_p wraps each element in a paragrph -->
-				{{ user_form.as_p }}
-				{{ profile_form.as_p }}
+	<h1>Register with OpenCAD</h1>
+	{% if registered %}
+	<strong>Thank you for registering!</strong>
+	<a href="/blog/">Return to homepage.</a><br />
+	{% else %}
+	<strong>Register here!</strong><br />
+	<form id="user_form" method="post" action="/blog/register/" enctype="multipart/form-data">
+		{% csrf_token %}
+		<!-- as_p wraps each element in a paragrph -->
+		{{ user_form.as_p }}
+		{{ profile_form.as_p }}
 
-				<input type="submit" name="submit" value="Register"/>
-			</form>
-			{% endif %}
-  </body>
+		<input type="submit" name="submit" value="Register"/>
+	</form>
+	{% endif %}
 
-</html>
+{% endblock %}			
 <!--When you want users to upload files from a form, it’s an absolute must to set enctype to multipart/form-data. This attribute and value combination instructs your browser to send form data in a special way back to the server. Essentially, the data representing your file is split into a series of chunks and sent. -->

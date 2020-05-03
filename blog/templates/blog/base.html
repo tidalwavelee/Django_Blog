@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang='en'>
+
+  <head>
+		<meta charset="utf-8">
+		<title>openCAD - {% block title %}openCAD{% endblock %}</title>
+  </head>
+
+  <body>
+		<div>
+			<div>
+				openCAD
+			</div>
+			<div>
+				<ul>
+					<li><a href="{% url 'blog:index' %}">Home</a></li>
+					<li><a href="{% url 'blog:about' %}">About</a></li>
+				</ul>
+			</div>
+			<div>
+				{% if user.is_authenticated %}
+					Welcome,<strong>{{user.username}}</strong> 
+					<a href="{% url 'blog:logout' %}">Logout</a>
+				{% else %}
+					Welcome to the world of OpenCAD, <strong>{{ boldmessage }}</strong>
+					<a href="{% url 'blog:login' %}">Login</a>
+				{% endif %}
+				or, <a href="{% url 'blog:register' %}">New Register</a> 
+			</div>
+		</div>
+
+	  <div>
+		  {% block body_block %}{% endblock %}
+	  </div>
+
+  </body>
+
+</html>

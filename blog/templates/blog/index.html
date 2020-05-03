@@ -1,41 +1,22 @@
-<!DOCTYPE html>
+{% extends 'blog/base.html' %}
 
 {% load static %}
 
-<html lang='en'>
+{% block title %}Blog{% endblock %}
 
-  <head>
-    <title>Blog</title>
-		<meta charset="utf-8">
-  </head>
+{% block body_block %}
+  <h2>OpenCADs Blogs</h2>
 
-  <body>
-      <h2>OpenCADs Blogs</h2>
-
-			{% if user.is_authenticated %}
-			Welcome back to OpenCAD, <strong>{{user.username}}</strong> !
-			<a href="/blog/logout/">Logout</a><br />
-			{% else %}
-      Welcome to the world of OpenCAD, <strong>{{ boldmessage }}</strong> !
-			<a href="/blog/register/">Register Here</a> or 
-			<a href="/blog/login/">Login</a>
-			{% endif %}
-
-			<br />
-      <a href="/blog/about/">About</a><br />
-
-			{% if categories %}
-				<ul>
-					{% for category in categories %}
-					<li><a href="{% url 'blog:category' category.slug %}">{{ category.name }}</a></li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<strong>There are no categories present.</strong>
-			{% endif %}
-			<a href="/blog/add_article/">Add a New Article</a><br />
-			
-			<img src="{% static "blog/images/galaxy.jpg" %}" alt="My image">
-  </body>
-
-</html>
+	{% if categories %}
+		<ul>
+			{% for category in categories %}
+			<li><a href="{% url 'blog:category' category.slug %}">{{ category.name }}</a></li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<strong>There are no categories present.</strong>
+	{% endif %}
+	<a href="{% url 'blog:add_article' %}">Add a New Article</a><br />
+	
+	<img src="{% static "blog/images/galaxy.jpg" %}" alt="My image">
+{% endblock %}

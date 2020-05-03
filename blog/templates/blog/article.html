@@ -1,15 +1,11 @@
-<!DOCTYPE html>
+{% extends 'blog/base.html' %}
 
 {% load static %}
 
-<html lang='en'>
+{% block title %}article{% endblock %}
 
-  <head>
-    <title>Blog</title>
-		<meta charset="utf-8">
-  </head>
+{% block body_block %}
 
-  <body>
 			{% if article %}
 				<h1>{{ article.title }}</h1>
 				<p>Pulished by {{ article.author }} on {{ article.publish_date }} </p>
@@ -19,5 +15,4 @@
 				<strong>The specified article {{ article.title }} does not exist!</strong>
 			{% endif %}
   </body>
-
-</html>
+{% endblock %}
