@@ -21,12 +21,13 @@
 			<div>
 				{% if user.is_authenticated %}
 					Welcome,<strong>{{user.username}}</strong> 
-					<a href="{% url 'blog:logout' %}">Logout</a>
+					<a href="{% url 'auth_logout' %}?next=/blog/">Logout</a>,
+					<a href="{% url 'auth_password_change'%}">Change Password</a>
 				{% else %}
 					Welcome to the world of OpenCAD, <strong>{{ boldmessage }}</strong>
-					<a href="{% url 'blog:login' %}">Login</a>
+					<a href="{% url 'auth_login' %}">Login</a>
 				{% endif %}
-				or, <a href="{% url 'blog:register' %}">New Register</a> 
+				or, <a href="{% url 'registration_register' %}">Sign Up</a> 
 			</div>
 		</div>
 
