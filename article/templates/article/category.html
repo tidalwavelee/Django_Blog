@@ -9,7 +9,7 @@
 		<h1>{{ category_name }}</h1>
 
 		{% for article in articles %}
-			<a href="/blog/{{ category.slug }}/{{ article.slug }}">{{article.title}}</a>
+			<a href="/article/{{ category.slug }}/{{ article.slug }}">{{article.title}}</a>
 			<p>
 				Updated_date: {{article.last_updated_time|date:"Y-m-d"}}
 			</p>

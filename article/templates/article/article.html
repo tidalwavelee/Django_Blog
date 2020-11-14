@@ -11,7 +11,7 @@
 				{% if article %}
 					<h1>{{ article.title }}</h1>
 					<p>
-						Type: <a href="{% url 'blog:category' article.category.slug %}">{{article.category}}</a>
+						Type: <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
 						Pulished by {{ article.author }} on {{ article.publish_date }} 
 					</p>
 					<p> {{ article.article }} </p>
