@@ -16,22 +16,14 @@ class Category(models.Model):
 
 class Article(models.Model):
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
-    title = models.CharField(max_length=128)
-    article = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    publish_date = models.DateField(auto_now_add=True)
-    last_updated_time = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=64)
+    body = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     read = models.IntegerField(default=0)
-    slug = models.SlugField(unique=True,max_length=128)
-
-    def get_unique_slug(self):
-        title_slug = slugify(self.title.replace(' ','_'))
-        date_slug = slugify(self.publish_date)
-        unique_slug = title_slug+'_'+date_slug
-        return unique_slug
 
     def save(self, *args, **kwargs):
-        self.slug = self.get_unique_slug()
         super(Article, self).save(*args, **kwargs)
 
     def __str__(self):

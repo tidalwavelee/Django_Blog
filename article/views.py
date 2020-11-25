@@ -38,7 +38,6 @@ def index(request):
 
 def category(request, category_slug):
     context = {}
-
     try:
         category = Category.objects.get(slug=category_slug)
         context['category_name'] = category.name
@@ -52,10 +51,9 @@ def category(request, category_slug):
 
     return render(request, 'article/category.html', context)
 
-def article(request, article_slug):
+def article(request, article_pk):
     context = {}
-
-    article = get_object_or_404(Article,slug=article_slug)
+    article = get_object_or_404(Article, pk=article_pk)
     context['article'] = article
     article.read += 1
     article.save()

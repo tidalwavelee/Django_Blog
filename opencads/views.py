@@ -5,7 +5,7 @@ from article.models import Category,Article
 from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
 
-def index(request):
+def home(request):
 
     context = {'boldmessage': "товарищ"}
     category_list = Category.objects.order_by('-name')[:5]
@@ -33,7 +33,7 @@ def index(request):
         request.session['visits'] = visits
     context['visit'] = visits
 
-    response = render(request, 'cadmain/home.html',context)
+    response = render(request, 'home.html',context)
     return response
 
 

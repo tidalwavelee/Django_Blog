@@ -10,7 +10,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('category','title','author','publish_date','last_updated_time','slug')
+    list_display = ('category','title','author','created_at','updated_at')
 
 # define an inline admin descriptor for UserProfile model
 class UserProfileInline(admin.StackedInline):

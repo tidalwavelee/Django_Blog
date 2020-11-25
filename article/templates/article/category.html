@@ -7,16 +7,16 @@
 {% block body_block %}
 	{% if category %}
 		<h1>{{ category_name }}</h1>
-
 		{% for article in articles %}
-			<a href="/article/{{ category.slug }}/{{ article.slug }}">{{article.title}}</a>
+			<a href="/article/{{ category.slug }}/{{ article.pk }}">{{article.title}}</a>
 			<p>
-				Updated_date: {{article.last_updated_time|date:"Y-m-d"}}
+				Updated_date: {{article.updated_at|date:"Y-m-d"}}
 			</p>
-			<p>{{article.article|truncatechars:128}}</p>
+			<p>{{article.body|truncatechars:128}}</p>
 		{% empty %}
 			<strong>There are no articles in current category.</strong>
 		{% endfor %}
+    <p>Found {{ articles|length}} articles</p>
 
 	{% else %}
 		The specified category {{ category_name }} does not exist!

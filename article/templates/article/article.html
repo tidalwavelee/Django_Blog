@@ -12,10 +12,10 @@
 					<h1>{{ article.title }}</h1>
 					<p>
 						Type: <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
-						Pulished by {{ article.author }} on {{ article.publish_date }} 
+						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:n:s" }} 
 					</p>
-					<p> {{ article.article }} </p>
-					<p>Read {{ article.read }} times,   Updated on {{ article.last_updated_time }}</p>
+					<p> {{ article.body }} </p>
+					<p>Read {{ article.read }} times,   Updated on {{ article.updated_at }}</p>
 				{% else %}
 					<strong>The specified article {{ article.title }} does not exist!</strong>
 				{% endif %}
