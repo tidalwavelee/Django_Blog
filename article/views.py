@@ -1,10 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,Http404
+from django.conf import settings
+from django.core.paginator import Paginator
 from article.models import Category,Article
 from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
 
+ARTICLE_PER_PAGE = settings.ARTICLE_PER_PAGE
 def index(request):
 
     context = {'boldmessage': "товарищ"}
@@ -36,16 +39,33 @@ def index(request):
     response = render(request, 'article/index.html',context)
     return response
 
+def _page_range(current_num, page_range):
+  page_num = page_range[-1]
+  pages = [i for i in range(current_num-2,current_num+3) if i in page_range]
+  if pages[0] >= 3:
+    pages.insert(0,'...')
+  if pages[-1] <= page_num-2:
+    pages.append('...')
+  if pages[0] != 1:
+    pages.insert(0,1)
+  if pages[-1] != page_num:
+    pages.append(page_num)
+  return pages
+
 def category(request, category_slug):
+    page_num = request.GET.get('page',1)
     context = {}
     try:
         category = Category.objects.get(slug=category_slug)
-        context['category_name'] = category.name
-
+        context['category'] = category
         articles = Article.objects.filter(category=category)
         context['articles'] = articles
 
-        context['category'] = category
+        paginator = Paginator(articles,ARTICLE_PER_PAGE)
+        article_page = paginator.get_page(page_num)
+        context['article_page'] = article_page
+        page_range = _page_range(article_page.number, paginator.page_range) 
+        context['page_range'] = page_range
     except Category.DoesNotExist:
         raise Http404("Category does not exist")
 
@@ -59,9 +79,7 @@ def article(request, article_pk):
     article.save()
     return render(request, 'article/article.html', context)
 
-def about(request):
-    return HttpResponse("opencads is dedicated to open source CAD tools")
-
+@login_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)

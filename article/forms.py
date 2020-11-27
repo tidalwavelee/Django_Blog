@@ -16,12 +16,12 @@ class CategoryForm(forms.ModelForm):
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(max_length=128, help_text="Title")
     article = forms.CharField(widget=forms.Textarea, help_text="Content")
-    publish_date = forms.DateField(initial=datetime.date.today)
+    created_at = forms.DateTimeField(initial=datetime.date.today)
     read = forms.IntegerField(widget=forms.HiddenInput(),initial=0)
 
     class Meta:
         model = Article
-        exclude = ('last_updated_time',)
+        exclude = ('updated_at',)
 
 #    def clean(self):
 #        cleaned_data = self.cleaned_data
