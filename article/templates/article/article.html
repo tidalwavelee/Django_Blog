@@ -14,8 +14,22 @@
 						Type: <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
 						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:n:s" }} 
 					</p>
-					<p> {{ article.body }} </p>
+					<p> {{ article.md | safe }} </p>
 					<p>Read {{ article.read }} times,   Updated on {{ article.updated_at }}</p>
+          <p>Previous: 
+            {% if previous_article %}
+              <a href="/article/{{article.category.slug}}/{{previous_article.pk}}">{{previous_article.title}}</a>
+            {% else %}
+              None
+            {% endif %}
+          </p>
+          <p>Next:
+            {% if next_article %}
+               <a href="{% url 'article:article' article.category.slug next_article.pk %}">{{next_article.title}}</a>
+            {% else %}
+              Next: None
+            {% endif %}
+          </p>
 				{% else %}
 					<strong>The specified article {{ article.title }} does not exist!</strong>
 				{% endif %}

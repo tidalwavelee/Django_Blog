@@ -3,9 +3,10 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.conf import settings
 from django.core.paginator import Paginator
-from article.models import Category,Article
+from article.models import Category,Article,ReadNum
 from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
+import markdown
 
 ARTICLE_PER_PAGE = settings.ARTICLE_PER_PAGE
 def index(request):
@@ -72,12 +73,28 @@ def category(request, category_slug):
     return render(request, 'article/category.html', context)
 
 def article(request, article_pk):
-    context = {}
-    article = get_object_or_404(Article, pk=article_pk)
-    context['article'] = article
-    article.read += 1
-    article.save()
-    return render(request, 'article/article.html', context)
+  context = {}
+  article = get_object_or_404(Article, pk=article_pk)
+  article.md = markdown.markdown(article.body, extensions=[
+                 'markdown.extensions.extra',
+                 'markdown.extensions.codehilite',
+                 'markdown.extensions.toc'])
+  next_article = Article.objects.filter(created_at__gt=article.created_at).last()
+  previous_article = Article.objects.filter(created_at__lt=article.created_at).first()
+  context['article'] = article
+  context['next_article'] = next_article
+  context['previous_article'] = previous_article
+  if not request.COOKIES.get(f"article_{article.pk}_visited"):
+    if article.read_num.first():
+      rn = article.read_num.first()
+    else:
+      rn = ReadNum(content_object=article,number=0)
+    rn.number += 1
+    rn.save()
+
+  response = render(request, 'article/article.html', context)
+  response.set_cookie(f"article_{article.pk}_visited",'true')
+  return response
 
 @login_required
 def add_category(request):
@@ -100,7 +117,7 @@ def add_article(request):
         form = ArticleForm(request.POST)
         if form.is_valid():
             new_article = form.save(commit=True)
-            return article(request,new_article.slug)
+            return article(request, new_article.pk)
         else:
             print(form.errors)
     else:

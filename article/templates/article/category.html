@@ -15,7 +15,7 @@
 		    	<p>
           <span class="fas fa-pen"></span>{{article.author}} updated@{{article.updated_at|date:"Y-m-d"}}
 		    	</p>
-		    	<p>{{article.body|truncatechars:128}}</p>
+		    	<p>{{article.body | striptags | truncatechars:128}}</p>
 		    {% empty %}
 		    	<strong>There are no articles in current category.</strong>
 		    {% endfor %}

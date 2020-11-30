@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from article.models import UserProfile
 from article.models import Category,Article,UserProfile
+from mdeditor.fields import MDTextFormField
 import datetime
 
 class CategoryForm(forms.ModelForm):
@@ -14,14 +15,14 @@ class CategoryForm(forms.ModelForm):
         fields = ('name',)
 
 class ArticleForm(forms.ModelForm):
-    title = forms.CharField(max_length=128, help_text="Title")
-    article = forms.CharField(widget=forms.Textarea, help_text="Content")
-    created_at = forms.DateTimeField(initial=datetime.date.today)
-    read = forms.IntegerField(widget=forms.HiddenInput(),initial=0)
+#    title = forms.CharField(max_length=128, help_text="Title")
+#    body = MDTextFormField()
+#    created_at = forms.DateTimeField(initial=datetime.date.today)
+#    read = forms.IntegerField(widget=forms.HiddenInput(),initial=0)
 
     class Meta:
         model = Article
-        exclude = ('updated_at',)
+        exclude = ('updated_at','read',)
 
 #    def clean(self):
 #        cleaned_data = self.cleaned_data
