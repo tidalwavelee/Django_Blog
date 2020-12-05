@@ -7,7 +7,7 @@
 {% block body_block %}
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-10">
+			<div class="col-sm-10">
 				{% if article %}
 					<h1>{{ article.title }}</h1>
 					<p>
@@ -35,6 +35,33 @@
 				{% endif %}
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-sm-10 offset-sm-1">
+        <div class="comment-area">
+          <h3>提交评论</h3>
+          {% if user.is_authenticated %}
+          <form action="{% url 'comment:add_comment' %}" method="POST">
+              {% csrf_token %}
+              {{ comment_form.as_p }}
+		          <input class="btn btn-primary" type="submit" name="submit" value="评论"/>
+            </form>
+          {% else %}
+            <p>登录后评论</p>
+          {% endif %}
+        </div>
+        <div class="comment-area">
+          <h3>评论</h3>
+          <div>
+          {% for comment in comments %}
+            {{ comment.user.username }}
+            {{ comment.created_at|date:"Y-m-d H:n:s" }}
+            {{ comment.body }}
+          </div>
+          {% empty %}
+            <p>暂无评论</p>
+          {% endfor %}
+        </div>
+			</div>
+		</div>
 	</div>
-  </body>
 {% endblock %}

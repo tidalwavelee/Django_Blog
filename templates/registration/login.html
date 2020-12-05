@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
 
 {% block body_block %}
-
-	<h1>Login to OpenCAD</h1>
-	<form method="post" action=".">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Log in" />
-		<input type="hidden" name="next" value="{{ next }}" />
-	</form>
-	<p> Not a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-sm-4 offset-sm-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>登录 OpenCAD</h5>
+        </div>
+        <div class="card-body">
+	        <form method="post" action=".">
+	        	{% csrf_token %}
+            {% for field in form %}
+              <label for="{{field.id_for_label}}">{{ field.label }}</label>
+              {{field}}
+              <p class="text-danger">{{ field.erros.as_text }}</p>
+            {% endfor %}
+            <span class="text-danger">{{ form.non_field_errors }}</span>
+	        	<input type="submit" value="登录" class="btn btn-primary" />
+	        	<input type="hidden" name="next" value="{{ next }}" />
+	        </form>
+	        <p> Not a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

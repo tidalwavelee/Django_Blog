@@ -20,7 +20,7 @@ class Category(models.Model):
 
 class ReadNum(models.Model):
   number = models.IntegerField(default=0)
-  content_type = models.ForeignKey(ContentType,on_delete=models.DO_NOTHING)
+  content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey('content_type','object_id')
 

@@ -6,7 +6,7 @@
 	<div class="collapse navbar-collapse col-auto" id="navbarCollapse">
 		<div class="navbar-nav">
 			<a class="nav-item nav-link h5 active" href="{% url 'home' %}">首页</a>
-			<a class="nav-item nav-link h5" href="#">新闻</a>
+			<a class="nav-item nav-link h5" href="#">资讯</a>
 			<a class="nav-item nav-link h5" href="{% url 'article:index' %}">文章</a>
 			<a class="nav-item nav-link h5" href="#">文档</a>
 			<a class="nav-item nav-link h5" href="#">项目</a>
@@ -15,8 +15,13 @@
 		</div>
 	</div>
 	<div class="col-3 justify-content-end align-items-center">
-		<a class="btn-sm btn-outline-secondary mx-1" href="{% url 'auth_login' %}">登录</a>
-		<a class="btn btn-sm btn-outline-secondary mx-1" href="{% url 'registration_register' %}">注册</a>
+    {% if user.is_authenticated %}
+      您好,<a class="" href="#">{{user.username}}</a>!
+      <a class="btn-sm btn-outline-secondary mx-1" href="{% url 'auth_logout' %}?next={{request.path}}">Logout</a>
+    {% else %}
+		  <a class="btn-sm btn-outline-secondary mx-1" href="{% url 'auth_login' %}?next={{request.path}}">登录</a>
+		  <a class="btn btn-sm btn-outline-secondary mx-1" href="{% url 'registration_register' %}">注册</a>
+    {% endif %}
 	</div>
 </div>
 

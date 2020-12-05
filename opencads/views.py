@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from article.models import Category,Article
-from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
 
 def home(request):

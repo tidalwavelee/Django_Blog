@@ -18,27 +18,19 @@ class ArticleForm(forms.ModelForm):
 #    title = forms.CharField(max_length=128, help_text="Title")
 #    body = MDTextFormField()
 #    created_at = forms.DateTimeField(initial=datetime.date.today)
-#    read = forms.IntegerField(widget=forms.HiddenInput(),initial=0)
 
     class Meta:
         model = Article
         exclude = ('updated_at','read',)
 
-#    def clean(self):
-#        cleaned_data = self.cleaned_data
-#        read = cleaned_data.get('read')
-#        if not read:
-#            cleaned_data['read'] = 0
-#        return cleaned_data
-
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = User
-        fields=('username','email','password')
-
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ('title','website','picture')
+#class UserForm(forms.ModelForm):
+#    password = forms.CharField(widget=forms.PasswordInput())
+#
+#    class Meta:
+#        model = User
+#        fields=('username','email','password')
+#
+#class UserProfileForm(forms.ModelForm):
+#    class Meta:
+#        model = UserProfile
+#        fields = ('title','website','picture')
