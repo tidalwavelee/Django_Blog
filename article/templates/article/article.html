@@ -12,7 +12,7 @@
 					<h1>{{ article.title }}</h1>
 					<p>
 						Type: <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
-						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:n:s" }} 
+						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:i:s" }} 
 					</p>
 					<p> {{ article.md | safe }} </p>
 					<p>Read {{ article.read }} times,   Updated on {{ article.updated_at }}</p>
@@ -40,9 +40,10 @@
         <div class="comment-area">
           <h3>提交评论</h3>
           {% if user.is_authenticated %}
-          <form action="{% url 'comment:add_comment' %}" method="POST">
+          <form id="comment_form" method="POST">
               {% csrf_token %}
               {{ comment_form.as_p }}
+              <span id="comment_error" class="text-danger"></span>
 		          <input class="btn btn-primary" type="submit" name="submit" value="评论"/>
             </form>
           {% else %}
@@ -51,17 +52,46 @@
         </div>
         <div class="comment-area">
           <h3>评论</h3>
-          <div>
-          {% for comment in comments %}
-            {{ comment.user.username }}
-            {{ comment.created_at|date:"Y-m-d H:n:s" }}
-            {{ comment.body }}
+          <div id="comment_history">
+            {% for comment in comments %}
+              <p>
+              {{ comment.user.username }}
+              @{{ comment.created_at|date:"Y-m-d H:i:s" }}
+              :-->{{ comment.body }}
+              </p>
+            {% empty %}
+              <p>暂无评论</p>
+            {% endfor %}
           </div>
-          {% empty %}
-            <p>暂无评论</p>
-          {% endfor %}
         </div>
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    $("#comment_form").submit(function(){
+      $("#comment_error").text("");
+          $.ajax({
+            type: 'POST',
+            url: '{% url 'comment:add_comment' %}',
+            data: $("#comment_form").serialize(),
+            dataType: 'json',
+            success: function(data){
+                  if(data['status']=="SUCCESS"){
+                        var comment_html = data['username'] + '@' + data['comment_time'] + ':-->' + data['comment_body'];
+                    $("#comment_history").prepend(comment_html);
+                    $("#id_body").val('');
+                  }else{
+                    $("#comment_error").text(data['status']);
+                  }
+            },
+            error: function(xhr){
+              console.log(xhr);
+            }
+          });
+          return false;
+        });
+  </script>
 {% endblock %}

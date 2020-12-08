@@ -1,23 +1,24 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.http import JsonResponse
 from comment.forms import CommentForm
-# from comment.models import Comment
 
 @login_required
 def add_comment(request):
-  referer = request.META.get('HTTP_REFERER', reverse('article:index')) 
-  if request.method == 'POST':
-    text = request.POST.get('body','').strip()
-    if text.isspace():
-      return redirect(referer)
+  data={"status": "ERROR"}
+  if request.is_ajax():
     comment_form = CommentForm(request.POST)
     if comment_form.is_valid():
       comment = comment_form.save(commit=False)
       comment.user = request.user
       comment.save()
+      data["status"] = 'SUCCESS'
+      data["username"] = comment.user.username
+      data["comment_time"] = comment.created_at.strftime('%Y-%m-%d %H:%M:%S')
+      data["comment_body"] = comment.body
+    else:
+      data["status"] = '无效数据'
   else:
     comment_form = CommentForm()
-  return redirect(referer)
-
+    data["status"] = 'Cannot used for query!'
+  return JsonResponse(data)
   
