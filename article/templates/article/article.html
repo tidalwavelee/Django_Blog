@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load comment_extras %}
 
 {% block title %}article{% endblock %}
 
@@ -15,7 +16,7 @@
 						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:i:s" }} 
 					</p>
 					<p> {{ article.md | safe }} </p>
-					<p>Read {{ article.read }} times,   Updated on {{ article.updated_at }}</p>
+          <p>Read {{ article.read }} times,  Updated on {{ article.updated_at }}</p>
           <p>Previous: 
             {% if previous_article %}
               <a href="/article/{{article.category.slug}}/{{previous_article.pk}}">{{previous_article.title}}</a>
@@ -42,6 +43,7 @@
           {% if user.is_authenticated %}
           <form id="comment_form" method="POST">
               {% csrf_token %}
+              {% get_comment_form article as comment_form %}
               {{ comment_form.as_p }}
               <span id="comment_error" class="text-danger"></span>
 		          <input class="btn btn-primary" type="submit" name="submit" value="评论"/>
@@ -53,6 +55,7 @@
         <div class="comment-area">
           <h3>评论</h3>
           <div id="comment_history">
+            {% retrieve_comments article as comments %}
             {% for comment in comments %}
               <p>
               {{ comment.user.username }}

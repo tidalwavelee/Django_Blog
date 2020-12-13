@@ -1,13 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.conf import settings
 from django.core.paginator import Paginator
 from article.models import Category,Article,ReadNum
 from article.forms import CategoryForm,ArticleForm
-from comment.models import Comment
-from comment.forms import CommentForm
 from datetime import datetime
 import markdown
 
@@ -94,12 +91,6 @@ def article(request, article_pk):
       rn = ReadNum(content_object=article,number=0)
     rn.number += 1
     rn.save()
-
-  article_content_type = ContentType.objects.get_for_model(article) 
-  context['comment_form'] = CommentForm(initial={'content_type': article_content_type,'object_id': article_pk})
-
-  comments = Comment.objects.filter(content_type=article_content_type, object_id=article.pk)
-  context['comments'] = comments
 
   response = render(request, 'article/article.html', context)
   response.set_cookie(f"article_{article.pk}_visited",'true')
