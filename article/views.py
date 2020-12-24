@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -72,7 +72,7 @@ def category(request, category_slug):
 
     return render(request, 'article/category.html', context)
 
-def article(request, article_pk):
+def article_detail(request, category_slug, article_pk):
   context = {}
   article = get_object_or_404(Article, pk=article_pk)
   article.md = markdown.markdown(article.body, extensions=[
@@ -111,16 +111,35 @@ def add_category(request):
     return render(request, 'article/add_category.html', {'form':form})
 
 @login_required
-def add_article(request):
-
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            new_article = form.save(commit=True)
-            return article(request, new_article.pk)
-        else:
-            print(form.errors)
+def article_edit(request, id=0):
+  if request.method == 'POST':
+    form = ArticleForm(request.POST)
+    if form.is_valid():
+      if id > 0:
+        article = Article.objects.get(id=id)
+        article.title = request.POST['title']
+        category = Category.objects.get(id=request.POST['category'])
+        article.category = category
+        article.body = request.POST['body']
+      else:
+        article = form.save(commit=False)
+        article.author = request.user
+      article.save()
+      return article_detail(request, "", article.pk)
     else:
-        form = ArticleForm()
+      print(form.errors)
+  else:
+    if id > 0:
+      article = Article.objects.get(id=id)
+      form = ArticleForm(instance=article)
+    else:
+      form = ArticleForm()
+  return render(request, 'article/article_edit.html', {'form':form})
 
-    return render(request, 'article/add_article.html', {'form':form})
+def article_delete(request, id):
+  if request.method == "POST":
+    article = Article.objects.get(id=id)
+    article.delete()
+    return redirect("article:index")
+  else:
+    return HttpResponse("无效删除操作")

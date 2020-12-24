@@ -11,11 +11,20 @@
     <div class="row">
       <div class="col-sm-12 col-md-9">
 		    {% for article in article_page.object_list %}
-          <h4><a href="/article/{{ category.slug }}/{{ article.pk }}">{{article.title}}</a></h4>
-		    	<p>
-          <span class="fas fa-pen"></span>{{article.author}} updated@{{article.updated_at|date:"Y-m-d"}}
-		    	</p>
-		    	<p>{{article.body | striptags | truncatechars:128}}</p>
+          <div class="col-12 mb-9">
+            <div class="card h-100">
+              <!-- 标题 -->
+              <h4 class="card-header">{{ article.title }}</h4>
+              <!-- 摘要 -->
+              <div class="card-body">
+                  <span class="fas fa-pen"></span>{{article.author}} updated@{{article.updated_at|date:"Y-m-d"}}
+                  <p class="card-text">{{ article.body|striptags|truncatechars:128 }}...</p>
+                  <a href="{% url 'article:article_detail' category.slug article.id %}" class="btn btn-primary">阅读本文</a>
+              </div>
+              <!-- 注脚 -->
+              <!-- <div class="card-footer"></div> -->
+            </div>
+          </div>
 		    {% empty %}
 		    	<strong>There are no articles in current category.</strong>
 		    {% endfor %}
@@ -68,7 +77,7 @@
             <h6 class="card-title">Recent Updates</h6>
             <ul>
               {% for article in latest_articles %}
-              <li><a href="/article/{{ category.slug }}/{{ article.pk }}" class="card-link">{{article.title}}</a></li>
+              <li><a href="#" class="card-link">{{article.title}}</a></li>
               {% empty %}
               <li></li>
               {% endfor %}

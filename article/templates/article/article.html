@@ -11,22 +11,30 @@
 			<div class="col-sm-10">
 				{% if article %}
 					<h1>{{ article.title }}</h1>
-					<p>
+					<p class="alert alert-success">
 						Type: <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
 						Pulished by {{ article.author }} on {{ article.created_at|date:"Y-m-d H:i:s" }} 
+            {% if user.is_authenticated and user == article.author %}
+              <a href="{% url 'article:article_edit' article.pk %}">编辑</a>
+              <a href="#" onclick="confirm_safe_delete()">删除</a>
+              <form style="display:none;" id="safe_delete" action="{% url 'article:article_delete' article.pk %}" method="POST">
+              {% csrf_token %}
+              <button type="submit">发送</button>
+              </form>
+            {% endif %}
 					</p>
 					<p> {{ article.md | safe }} </p>
           <p>Read {{ article.read }} times,  Updated on {{ article.updated_at }}</p>
           <p>Previous: 
             {% if previous_article %}
-              <a href="/article/{{article.category.slug}}/{{previous_article.pk}}">{{previous_article.title}}</a>
+              <a href="{% url 'article:article_detail' article.category.slug previous_article.pk %}">{{previous_article.title}}</a>
             {% else %}
               None
             {% endif %}
           </p>
           <p>Next:
             {% if next_article %}
-               <a href="{% url 'article:article' article.category.slug next_article.pk %}">{{next_article.title}}</a>
+               <a href="{% url 'article:article_detail' article.category.slug next_article.pk %}">{{next_article.title}}</a>
             {% else %}
               Next: None
             {% endif %}
@@ -96,5 +104,16 @@
           });
           return false;
         });
+
+    function confirm_safe_delete() {
+      layer.open({
+          title:"Confirmation",
+          content: "确认删除这篇吗？",
+          yes: function(index, layero) {
+                $('form#safe_delete button').click();
+                layer.close(index);
+               }
+      })
+    }
   </script>
 {% endblock %}

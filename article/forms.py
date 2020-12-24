@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from article.models import UserProfile
 from article.models import Category,Article,UserProfile
 from mdeditor.fields import MDTextFormField
@@ -15,13 +16,14 @@ class CategoryForm(forms.ModelForm):
         fields = ('name',)
 
 class ArticleForm(forms.ModelForm):
-#    title = forms.CharField(max_length=128, help_text="Title")
-#    body = MDTextFormField()
-#    created_at = forms.DateTimeField(initial=datetime.date.today)
-
-    class Meta:
-        model = Article
-        exclude = ('updated_at','read',)
+  class Meta:
+      model = Article
+      fields = ('title','category','body',)
+      labels = {
+          "title": _("文章标题"),
+          "category": _("文章分类"),
+          "body": _("文章正文"),
+        }
 
 #class UserForm(forms.ModelForm):
 #    password = forms.CharField(widget=forms.PasswordInput())
