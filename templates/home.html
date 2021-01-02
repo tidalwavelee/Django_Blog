@@ -127,15 +127,4 @@
 		</div>
 
 	</div>
-
-	<div>
-	{% if user.is_authenticated %}
-		Welcome,<strong>{{user.username}}</strong> 
-		<a href="{% url 'auth_logout' %}?next=/article/">Logout</a>,
-		<a href="{% url 'auth_password_change'%}">Change Password</a>
-	{% else %}
-		Welcome to the world of OpenCAD, <strong>{{ boldmessage }}</strong>
-		<a href="{% url 'auth_login' %}">Login</a>
-	{% endif %}
-	</div>
 {% endblock %}

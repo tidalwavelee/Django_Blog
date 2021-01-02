@@ -22,10 +22,11 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
+    path('userprofile/', include('userprofile.urls')),
     path('about/', views.about, name="about"),
     path('article/', include('article.urls')),
     path('comment/', include('comment.urls')),
-    path('accounts/', include('registration.backends.simple.urls')),
+    path('accounts/', include('registration.backends.default.urls')),
     path('mdeditor/', include('mdeditor.urls')),
 ]
 

@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 class Comment(models.Model):
-  user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
   created_at = models.DateTimeField(auto_now_add=True)
   body = models.TextField()
 

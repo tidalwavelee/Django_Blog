@@ -1,8 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from article.models import UserProfile
-from article.models import Category,Article,UserProfile
+from article.models import Category,Article
 from mdeditor.fields import MDTextFormField
 import datetime
 
@@ -24,15 +22,3 @@ class ArticleForm(forms.ModelForm):
           "category": _("文章分类"),
           "body": _("文章正文"),
         }
-
-#class UserForm(forms.ModelForm):
-#    password = forms.CharField(widget=forms.PasswordInput())
-#
-#    class Meta:
-#        model = User
-#        fields=('username','email','password')
-#
-#class UserProfileForm(forms.ModelForm):
-#    class Meta:
-#        model = UserProfile
-#        fields = ('title','website','picture')

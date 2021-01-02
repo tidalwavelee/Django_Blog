@@ -28,10 +28,10 @@ class ReadNum(models.Model):
     return f"ReadNum:{self.content_type}:{self.object_id}:{self.number}"
 
 class Article(models.Model):
-  category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+  category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
   title = models.CharField(max_length=64)
   body = MDTextField()
-  author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+  author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   read_num = GenericRelation(ReadNum)
@@ -48,11 +48,3 @@ class Article(models.Model):
   class Meta:
     ordering = ['-created_at']
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to='profile_images',blank=True)
-    title = models.CharField(max_length=64,blank=True)
-
-    def __str__(self):
-        return self.user.username

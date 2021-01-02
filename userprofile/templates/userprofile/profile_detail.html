@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}用户资料{% endblock %}
+
+{% block body_block %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <br>
+        <div class="col-md-4">用户名: {{ profile_user.username }}</div>
+        <br>
+        {% if profile.avatar %}
+          <div class="col-md-4">头像</div>
+          <img src="{{ profile.avatar.url }}" style="max-width: 20%; border-radius: 15%;" class="col-md-4">
+        {% else %}
+          <h5 class="col-md-4">暂无头像</h5>
+        {% endif %}
+        <br>
+        <div class="col-md-4">职业: {{ profile.title }}</div>
+        <br>
+        <div class="col-md-4">简介: {{ profile.bio }}</div>
+        <br>
+        {% if user.is_authenticated and user == profile_user %}
+          <a href="{% url 'userprofile:profile_edit' user.id %}">编辑</a>
+          <a href="#" onclick="confirm_safe_delete()">注销</a>
+          <form style="display:none;" id="user_delete" action="{% url 'userprofile:user_delete' user.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">发送</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    function confirm_safe_delete() {
+      layer.open({
+          title:"Confirmation",
+          content: "所有此用户的信息都将被彻底删除! 确认注销吗？",
+          yes: function(index, layero) {
+                $('form#user_delete button').click();
+                layer.close(index);
+               },
+      })
+    }
+  </script>
+{% endblock %}

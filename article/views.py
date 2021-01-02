@@ -131,6 +131,8 @@ def article_edit(request, id=0):
   else:
     if id > 0:
       article = Article.objects.get(id=id)
+      if request.user != article.author:
+        return article_detail(request, "", article.pk)
       form = ArticleForm(instance=article)
     else:
       form = ArticleForm()

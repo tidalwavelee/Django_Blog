@@ -6,7 +6,7 @@ from datetime import datetime
 
 def home(request):
 
-    context = {'boldmessage': "товарищ"}
+    context = {}
     category_list = Category.objects.order_by('-name')[:5]
     context['categories'] = category_list
     article_list = Article.objects

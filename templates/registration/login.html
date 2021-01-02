@@ -1,4 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Log in" %}{% endblock %}
 
 {% block body_block %}
 <div class="container">
@@ -17,10 +20,11 @@
               <p class="text-danger">{{ field.erros.as_text }}</p>
             {% endfor %}
             <span class="text-danger">{{ form.non_field_errors }}</span>
-	        	<input type="submit" value="登录" class="btn btn-primary" />
+	        	<input type="submit" value="{% trans 'Log in' %}" class="btn btn-primary" />
 	        	<input type="hidden" name="next" value="{{ next }}" />
 	        </form>
-	        <p> Not a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+          <p>{% trans "Forgot your password?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</p>
+          <p>{% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</p>
         </div>
       </div>
     </div>
