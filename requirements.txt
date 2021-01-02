@@ -1,5 +1,5 @@
 asgiref==3.2.3
-Django==3.0.3
+Django==3.0.7
 django-mdeditor==0.1.18
 django-registration-redux==2.7
 Markdown==3.3.3
