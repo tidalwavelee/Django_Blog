@@ -14,17 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,re_path
-from article import views
+from news import views
 
-app_name = 'article'
+app_name = 'news'
 urlpatterns = [
     path('', views.index, name='index'),
     path('increase_likes/', views.increase_likes, name='increase_likes'),
-    path('category_edit/', views.category_edit, name='category_edit'),
-    path('category_edit/<int:id>', views.category_edit, name='category_edit'),
-    path('article_edit/', views.article_edit, name='article_edit'),
-    path('article_edit/<int:id>/', views.article_edit, name='article_edit'),
-    path('article_delete/<int:id>/', views.article_delete, name='article_delete'),
+    path('news_edit/', views.news_edit, name='news_edit'),
+    path('news_edit/<int:id>/', views.news_edit, name='news_edit'),
+    path('news_delete/<int:id>/', views.news_delete, name='news_delete'),
     re_path(r'^(?P<category_slug>[\w\_]+)/$', views.category, name='category'),
-    re_path(r'^(?P<category_slug>[\w\_]+)/(?P<article_pk>[0-9]+)/$', views.article_detail, name='article_detail'),
+    re_path(r'^(?P<category_slug>[\w\_]+)/(?P<article_pk>[0-9]+)/$', views.news_detail, name='news_detail'),
 ]

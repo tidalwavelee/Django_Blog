@@ -3,7 +3,8 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.conf import settings
 from django.core.paginator import Paginator
-from article.models import Category,Article,ReadNum
+from django.views import View
+from article.models import Category,Article,ReadNum,LikeNum
 from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
 import markdown
@@ -11,11 +12,9 @@ import markdown
 ARTICLE_PER_PAGE = settings.ARTICLE_PER_PAGE
 def index(request):
 
-    context = {'boldmessage': "товарищ"}
+    context = {}
     category_list = Category.objects.order_by('-name')[:5]
     context['categories'] = category_list
-    article_list = Article.objects
-    context['articles'] = article_list
 
     # cookie of visiting
     visits = request.session.get('visits')
@@ -54,31 +53,34 @@ def _page_range(current_num, page_range):
   return pages
 
 def category(request, category_slug):
-    page_num = request.GET.get('page',1)
-    context = {}
-    try:
-        category = Category.objects.get(slug=category_slug)
-        context['category'] = category
-        articles = Article.objects.filter(category=category)
-        context['articles'] = articles
+  page_num = request.GET.get('page',1)
+  context = {}
+  try:
+    category = Category.objects.get(slug=category_slug)
+    context['category'] = category
+    articles = Article.objects.filter(category=category)
+    context['articles'] = articles
 
-        paginator = Paginator(articles,ARTICLE_PER_PAGE)
-        article_page = paginator.get_page(page_num)
-        context['article_page'] = article_page
-        page_range = _page_range(article_page.number, paginator.page_range) 
-        context['page_range'] = page_range
-    except Category.DoesNotExist:
-        raise Http404("Category does not exist")
+    paginator = Paginator(articles,ARTICLE_PER_PAGE)
+    article_page = paginator.get_page(page_num)
+    context['article_page'] = article_page
+    page_range = _page_range(article_page.number, paginator.page_range) 
+    context['page_range'] = page_range
+  except Category.DoesNotExist:
+    raise Http404("Category does not exist")
 
-    return render(request, 'article/category.html', context)
+  return render(request, 'article/category.html', context)
 
 def article_detail(request, category_slug, article_pk):
   context = {}
   article = get_object_or_404(Article, pk=article_pk)
-  article.md = markdown.markdown(article.body, extensions=[
-                 'markdown.extensions.extra',
-                 'markdown.extensions.codehilite',
-                 'markdown.extensions.toc'])
+  md = markdown.Markdown(
+         extensions=['markdown.extensions.extra',
+                     'markdown.extensions.codehilite',
+                     'markdown.extensions.toc']
+       )
+  article.md = md.convert(article.body)
+  article.toc = md.toc
   next_article = Article.objects.filter(created_at__gt=article.created_at).last()
   previous_article = Article.objects.filter(created_at__lt=article.created_at).first()
   context['article'] = article
@@ -97,18 +99,33 @@ def article_detail(request, category_slug, article_pk):
   return response
 
 @login_required
-def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save(commit=True)
-            return index(request)
-        else:
-            print(form.errors)
+def category_edit(request,id=0):
+  if not request.user.is_staff:
+    return HttpResponse("无权限操作")
+  if request.method == 'POST':
+    form = CategoryForm(request.POST,request.FILES)
+    if form.is_valid():
+      if id > 0:
+        form_cd = form.cleaned_data
+        category = Category.objects.get(id=id)
+        category.name = form_cd['name']
+        category.bio = form_cd['bio']
+      else:
+        category = form.save(commit=False)
+      if 'emblem' in request.FILES:
+        category.emblem = form.cleaned_data['emblem']
+      category.save()
+      return index(request)
     else:
-        form = CategoryForm()
+      return HttpResponse(form.errors)
+  else:
+    if id > 0:
+      category = Category.objects.get(id=id)
+      form = CategoryForm(instance=category)
+    else:
+      form = CategoryForm()
 
-    return render(request, 'article/add_category.html', {'form':form})
+  return render(request, 'article/category_edit.html', {'form':form})
 
 @login_required
 def article_edit(request, id=0):
@@ -127,7 +144,7 @@ def article_edit(request, id=0):
       article.save()
       return article_detail(request, "", article.pk)
     else:
-      print(form.errors)
+      return HttpResponse(form.errors)
   else:
     if id > 0:
       article = Article.objects.get(id=id)
@@ -145,3 +162,18 @@ def article_delete(request, id):
     return redirect("article:index")
   else:
     return HttpResponse("无效删除操作")
+
+ # 点赞数 +1
+def increase_likes(request):
+  if request.is_ajax():
+    article_id = request.POST['articleID']
+    article = Article.objects.get(id=article_id)
+    if article.like_num.first():
+      like = article.like_num.first()
+    else:
+      like = LikeNum(content_object=article,number=0)
+    like.number += 1
+    like.save()
+    return HttpResponse('success')
+  else:
+    return HttpResponse("无效点赞操作")

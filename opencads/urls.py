@@ -18,6 +18,7 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,9 +26,12 @@ urlpatterns = [
     path('userprofile/', include('userprofile.urls')),
     path('about/', views.about, name="about"),
     path('article/', include('article.urls')),
+    path('news/', include('news.urls')),
     path('comment/', include('comment.urls')),
     path('accounts/', include('registration.backends.default.urls')),
     path('mdeditor/', include('mdeditor.urls')),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path('notice/', include('notice.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,7 +1,7 @@
 <footer class="page-footer">
 	<div class="row">
 		<div class="col-12 col-md">
-  	  <img class="mb-2" src="/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
+      <h5>OPENCADS</h5>
   	  <small class="d-block mb-3 text-muted">&copy; 2020-2025</small>
   	</div>
   	<div class="col-6 col-md">
@@ -33,6 +33,59 @@
   	    <li><a class="text-muted" href="#">Terms</a></li>
   	  </ul>
   	</div>
+    <button type="button" id="BackTop" class="toTop-arrow"></button>
 	</div>
-	<p> <a href="#">Back to top</a> </p>
+
+<script>
+  // 向上滚动的函数
+  $(function () {
+    $('#BackTop').click(function () {
+      $('html,body').animate({scrollTop: 0}, 333);
+    });
+  });
+</script>
+
+<style>
+/* 按钮边框的大小、位置、样式 */
+  .toTop-arrow {
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      border-radius: 33%;
+      opacity: 0.7;
+      background: #686868;
+      cursor: pointer;
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 99;
+  }
+
+  /* 绘制按钮中的向上箭头 */
+  .toTop-arrow::before, .toTop-arrow::after {
+      width: 20px;
+      height: 5px;
+      border-radius: 3px;
+      background: #e8e8e8;
+      position: absolute;
+      content: "";
+  }
+
+  .toTop-arrow::before {
+      transform: rotate(-45deg) translate(0, -50%);
+      left: 0.4rem;
+  }
+
+  .toTop-arrow::after {
+      transform: rotate(45deg) translate(0, -50%);
+      right: 0.4rem;
+  }
+
+  .toTop-arrow:focus {
+      outline: none;
+  }
+</style>
+
 </footer>

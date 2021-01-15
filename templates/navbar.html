@@ -1,3 +1,7 @@
+<!-- 引入notifications的模板标签 -->
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
+
 <div class="navbar navbar-expand-lg navbar-light bg-light">
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -6,7 +10,7 @@
 	<div class="collapse navbar-collapse col-auto" id="navbarCollapse">
 		<div class="navbar-nav">
 			<a class="nav-item nav-link h5 active" href="{% url 'home' %}">首页</a>
-			<a class="nav-item nav-link h5" href="#">资讯</a>
+			<a class="nav-item nav-link h5" href="{% url 'news:index' %}">资讯</a>
 			<a class="nav-item nav-link h5" href="{% url 'article:index' %}">文章</a>
 			<a class="nav-item nav-link h5" href="#">问答</a>
 			<a class="nav-item nav-link h5" href="#">项目</a>
@@ -18,9 +22,26 @@
     {% if user.is_authenticated %}
       <div class="nav-item dropdown">
         <span class="navbar-text">您好!&nbsp</span>
+        <!-- 新增代码，小红点 -->
+        {% if unread_count %}
+          <svg viewBox="0 0 8 8"
+               width="8px"
+               height="8px">
+              <circle cx="4"
+                      cy="4"
+                      r="4"
+                      fill="#ff6b6b"
+                      ></circle>
+          </svg>
+        {% endif %}
         <a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.username}}</a>
         <span class="navbar-text">&nbsp&nbsp</span>
         <div class="dropdown-menu" >
+          <a class="dropdown-item" href="{% url 'notice:list' %}">消息
+            {% if unread_count %}
+            <span class="badge badge-danger">{{ unread_count }}</span>
+            {% endif %}
+          </a>
           <a class="dropdown-item" href="{% url 'userprofile:profile_detail' user.id %}">用户设置</a>
           <a class="dropdown-item" href="{% url 'auth_password_change'%}">修改密码</a>
           <a class="dropdown-item" href="{% url 'article:article_edit' %}">写文章</a>

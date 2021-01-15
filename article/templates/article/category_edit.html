@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}添加版面{% endblock %}
+
+{% block body_block %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <br>
+      {% if form.instance.emblem %}
+        <img src="{{ form.instance.emblem.url }}" style="max-width: 20%; border-radius: 15%;" class="col-md-4">
+      {% else %}
+        <h5 class="col-md-4">暂无</h5>
+      {% endif %}
+      <br>
+      <form method="post" action="." enctype="multipart/form-data">
+	      {% csrf_token %}
+        <!-- 版面标题图 -->
+        <div class="form-group">
+          <label for="emblem">上传版面图</label>
+          <input type="file" class="form-control-file" name="emblem" id="emblem">
+        </div>
+        <!-- name -->
+        <div class="form-group col-md-8">
+          <label for="name">版面名</label>
+          <input type="text" class="form-control" id="name" name="name"  value="{{form.name.value}}">
+        </div>
+        <!-- bio -->
+        <div class="form-group col-md-8">
+          <label for="bio">简介</label>
+          <textarea type="text" class="form-control" id="bio" name="bio" rows="12">{{form.bio.value}}</textarea>
+        </div>
+        <!-- 提交按钮 -->
+		    <input type="submit" name="submit" value="创建"/>
+      </form>
+      <br>
+    </div>
+  </div>
+</div>
+{% endblock %}
