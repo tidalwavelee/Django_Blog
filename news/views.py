@@ -61,12 +61,12 @@ def category(request, category_slug):
     category = Category.objects.get(slug=category_slug)
     context['category'] = category
     news = News.objects.filter(category=category)
-    context['articles'] = news
+    context['newss'] = news
 
     paginator = Paginator(news,ARTICLE_PER_PAGE)
-    article_page = paginator.get_page(page_num)
-    context['article_page'] = article_page
-    page_range = _page_range(article_page.number, paginator.page_range) 
+    news_page = paginator.get_page(page_num)
+    context['news_page'] = news_page
+    page_range = _page_range(news_page.number, paginator.page_range) 
     context['page_range'] = page_range
   except Category.DoesNotExist:
     raise Http404("Category does not exist")
@@ -85,9 +85,9 @@ def news_detail(request, category_slug, news_pk):
   news.toc = md.toc
   next_news = News.objects.filter(created_at__gt=news.created_at).last()
   previous_news = News.objects.filter(created_at__lt=news.created_at).first()
-  context['article'] = news
-  context['next_article'] = next_news
-  context['previous_article'] = previous_news
+  context['news'] = news
+  context['next_news'] = next_news
+  context['previous_news'] = previous_news
   if not request.COOKIES.get(f"news_{news.pk}_visited"):
     if news.read_num.first():
       rn = news.read_num.first()
@@ -126,7 +126,7 @@ def news_edit(request, id=0):
       form = NewsForm(instance=news)
     else:
       form = NewsForm()
-  return render(request, 'article/news_edit.html', {'form':form})
+  return render(request, 'news/news_edit.html', {'form':form})
 
 def news_delete(request, id):
   if request.method == "POST":

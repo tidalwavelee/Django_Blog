@@ -24,5 +24,5 @@ urlpatterns = [
     path('news_edit/<int:id>/', views.news_edit, name='news_edit'),
     path('news_delete/<int:id>/', views.news_delete, name='news_delete'),
     re_path(r'^(?P<category_slug>[\w\_]+)/$', views.category, name='category'),
-    re_path(r'^(?P<category_slug>[\w\_]+)/(?P<article_pk>[0-9]+)/$', views.news_detail, name='news_detail'),
+    re_path(r'^(?P<category_slug>[\w\_]+)/(?P<news_pk>[0-9]+)/$', views.news_detail, name='news_detail'),
 ]

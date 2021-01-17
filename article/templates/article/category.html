@@ -74,20 +74,6 @@
         <p>Found {{articles|length}} articles</p>
         {# END Page num navigation #}
       </div>
-      <div class="d-none d-md-block">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="card-title">Recent Updates</h6>
-            <ul>
-              {% for article in latest_articles %}
-              <li><a href="#" class="card-link">{{article.title}}</a></li>
-              {% empty %}
-              <li></li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
 	{% else %}
 		The specified category {{ category.name }} does not exist!

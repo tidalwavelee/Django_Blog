@@ -42,9 +42,12 @@
             <span class="badge badge-danger">{{ unread_count }}</span>
             {% endif %}
           </a>
-          <a class="dropdown-item" href="{% url 'userprofile:profile_detail' user.id %}">用户设置</a>
+          <a class="dropdown-item" href="{% url 'userprofile:profile_detail' user.id %}">用户中心</a>
           <a class="dropdown-item" href="{% url 'auth_password_change'%}">修改密码</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'news:news_edit' %}">分享资讯</a>
           <a class="dropdown-item" href="{% url 'article:article_edit' %}">写文章</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'auth_logout' %}?next={{request.path}}">退出</a>
         </div>
       </div>

@@ -8,49 +8,49 @@
 {% block body_block %}
 	<div class="container">
 		<div class="row">
-			{% if article %}
-				<h1 class="col-sm-12 mt-4 mb-4">{{ article.title }}</h1>
+			{% if news %}
+				<h1 class="col-sm-12 mt-4 mb-4">{{ news.title }}</h1>
 			  <div class="col-sm-10">
 					<p class="alert alert-success">
-            Pulished by <strong style="color: red">{{ article.author }}</strong> on {{ article.created_at|date:"Y-m-d H:i:s" }} 
-						in <a href="{% url 'article:category' article.category.slug %}">{{article.category}}</a>
-            {% if user.is_authenticated and user == article.author %}
-              <a href="{% url 'article:article_edit' article.pk %}">编辑</a>
+            Pulished by <strong style="color: red">{{ news.author }}</strong> on {{ news.created_at|date:"Y-m-d H:i:s" }} 
+						in <a href="{% url 'news:category' news.category.slug %}">{{news.category}}</a>
+            {% if user.is_authenticated and user == news.author %}
+              <a href="{% url 'news:news_edit' news.pk %}">编辑</a>
               <a href="#" onclick="confirm_safe_delete()">删除</a>
-              <form style="display:none;" id="safe_delete" action="{% url 'article:article_delete' article.pk %}" method="POST">
+              <form style="display:none;" id="safe_delete" action="{% url 'news:news_delete' news.pk %}" method="POST">
               {% csrf_token %}
               <button type="submit">发送</button>
               </form>
             {% endif %}
 					</p>
-					<p> {{ article.md | safe }} </p>
+					<p> {{ news.md | safe }} </p>
           <br>
           <div style="text-align:center;" class="mt-4">
             <button class="btn btn-outline-danger" type="button"
-              onclick="validate_is_like( {{ article.id }}, {{ article.likes }} )"
+              onclick="validate_is_like( {{ news.id }}, {{ news.likes }} )"
             >
               <span>点赞</span>
               <span><i class="fas fa-heart"></i></span>
-              <span id="likes_number">{{ article.likes }}</span>
+              <span id="likes_number">{{ news.likes }}</span>
             </button>
             <button class="btn btn-outline-primary" type="button">
               <span>浏览</span>
               <span><i class="fas fa-eye"></i></span>
-              <span id="read_number">{{ article.read }}</span>
+              <span id="read_number">{{ news.read }}</span>
             </button>
           </div>
-          <p>更新于 {{ article.updated_at }}</p>
+          <p>更新于 {{ news.updated_at }}</p>
           <br>
           <p>Previous: 
-            {% if previous_article %}
-              <a href="{% url 'article:article_detail' article.category.slug previous_article.pk %}">{{previous_article.title}}</a>
+            {% if previous_news %}
+              <a href="{% url 'news:news_detail' news.category.slug previous_news.pk %}">{{previous_news.title}}</a>
             {% else %}
               None
             {% endif %}
           </p>
           <p>Next:
-            {% if next_article %}
-               <a href="{% url 'article:article_detail' article.category.slug next_article.pk %}">{{next_article.title}}</a>
+            {% if next_news %}
+               <a href="{% url 'news:news_detail' news.category.slug next_news.pk %}">{{next_news.title}}</a>
             {% else %}
               Next: None
             {% endif %}
@@ -59,10 +59,10 @@
         <div class="col-2">
           <h4>目录</h4>
           <hr>
-					<p> {{ article.toc | safe }} </p>
+					<p> {{ news.toc | safe }} </p>
         </div>
 		  {% else %}
-			  <strong>The specified article does not exist!</strong>
+			  <strong>The specified news does not exist!</strong>
 		  {% endif %}
 		</div>
     <hr>
@@ -73,7 +73,7 @@
           <p><strong>欢迎留言!</strong></p>
           <form id="comment_form" method="POST">
               {% csrf_token %}
-              {% get_comment_form article as comment_form %}
+              {% get_comment_form news as comment_form %}
               {{ comment_form.as_p }}
               <span id="comment_error" class="text-danger"></span>
 		          <input class="btn btn-primary" type="submit" name="submit" value="评论"/>
@@ -90,7 +90,7 @@
         <div class="comment-area">
           <h4>过往评论:</h4>
           <div id="comment_history">
-            {% retrieve_comments article as comments %}
+            {% retrieve_comments news as comments %}
             {% for comment in comments %}
               <hr>
               <p> <strong style="color: red">{{ comment.user.username }}</strong>
@@ -147,7 +147,7 @@
     function validate_is_like(id, likes) {
       // 取出 LocalStorage 中的数据
       let storage = window.localStorage;
-      const storage_str_data = storage.getItem("my_article_data");
+      const storage_str_data = storage.getItem("my_news_data");
       let storage_json_data = JSON.parse(storage_str_data);
       // 若数据不存在，则创建空字典
       if (!storage_json_data) {
@@ -168,8 +168,8 @@
       $.ajax({
         type: 'POST',
         headers: {'X-CSRFToken': '{{ csrf_token }}'},
-        url: '{% url 'article:increase_likes' %}',
-        data: {'articleID': id},
+        url: '{% url 'news:increase_likes' %}',
+        data: {'newsID': id},
         success: function(data,status,xhr){
           if (status == 'success') {
             // 尝试修改点赞数据
@@ -182,12 +182,12 @@
             const d = JSON.stringify(storage_json_data);
             // 尝试存储点赞数据到 LocalStorage
             try {
-              storage.setItem("my_article_data", d);
+              storage.setItem("my_news_data", d);
             } catch (e) {
               // code 22 错误表示 LocalStorage 空间满了
               if (e.code === 22) {
                 window.localStorage.clear();
-                storage.setItem("my_article_data", d);
+                storage.setItem("my_news_data", d);
               }
             };
           } else {
