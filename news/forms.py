@@ -7,7 +7,7 @@ class NewsForm(forms.ModelForm):
       model = News
       fields = ('title','category','body',)
       labels = {
-          "title": _("文章标题"),
-          "category": _("文章分类"),
-          "body": _("文章正文"),
+          "title": _("标题"),
+          "category": _("分类"),
+          "body": _("正文"),
         }

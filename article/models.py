@@ -9,9 +9,9 @@ from PIL import Image
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
-    article_number = models.IntegerField(default=0)
     emblem = models.ImageField(upload_to='category/%Y%m%d/', blank=True)
     bio = models.TextField(max_length=500, blank=True)
+    article_content = models.TextField(blank=True)
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
@@ -26,7 +26,6 @@ class Category(models.Model):
           resized_image = image.resize((new_x, new_y), Image.ANTIALIAS)
           resized_image.save(self.emblem.path)
         return category
-
 
     def __str__(self):
         return self.name

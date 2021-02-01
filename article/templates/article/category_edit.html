@@ -14,7 +14,7 @@
         <h5 class="col-md-4">暂无</h5>
       {% endif %}
       <br>
-      <form method="post" action="." enctype="multipart/form-data">
+      <form method="post" action="" enctype="multipart/form-data">
 	      {% csrf_token %}
         <!-- 版面标题图 -->
         <div class="form-group">
@@ -31,8 +31,13 @@
           <label for="bio">简介</label>
           <textarea type="text" class="form-control" id="bio" name="bio" rows="12">{{form.bio.value}}</textarea>
         </div>
+        <!-- article_content -->
+        <div class="form-group col-md-8">
+          <label for="article_content">文章目录</label>
+          <textarea type="text" class="form-control" id="article_content" name="article_content" rows="12">{{form.article_content.value}}</textarea>
+        </div>
         <!-- 提交按钮 -->
-		    <input type="submit" name="submit" value="创建"/>
+		    <input type="submit" name="submit" value="提交"/>
       </form>
       <br>
     </div>

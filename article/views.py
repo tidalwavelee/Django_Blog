@@ -1,15 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect,Http404
-from django.conf import settings
-from django.core.paginator import Paginator
 from django.views import View
 from article.models import Category,Article,ReadNum,LikeNum
 from article.forms import CategoryForm,ArticleForm
 from datetime import datetime
 import markdown
 
-ARTICLE_PER_PAGE = settings.ARTICLE_PER_PAGE
 def index(request):
 
     context = {}
@@ -39,19 +36,6 @@ def index(request):
     response = render(request, 'article/index.html',context)
     return response
 
-def _page_range(current_num, page_range):
-  page_num = page_range[-1]
-  pages = [i for i in range(current_num-2,current_num+3) if i in page_range]
-  if pages[0] >= 3:
-    pages.insert(0,'...')
-  if pages[-1] <= page_num-2:
-    pages.append('...')
-  if pages[0] != 1:
-    pages.insert(0,1)
-  if pages[-1] != page_num:
-    pages.append(page_num)
-  return pages
-
 def category(request, category_slug):
   page_num = request.GET.get('page',1)
   context = {}
@@ -60,12 +44,6 @@ def category(request, category_slug):
     context['category'] = category
     articles = Article.objects.filter(category=category)
     context['articles'] = articles
-
-    paginator = Paginator(articles,ARTICLE_PER_PAGE)
-    article_page = paginator.get_page(page_num)
-    context['article_page'] = article_page
-    page_range = _page_range(article_page.number, paginator.page_range) 
-    context['page_range'] = page_range
   except Category.DoesNotExist:
     raise Http404("Category does not exist")
 
@@ -99,31 +77,25 @@ def article_detail(request, category_slug, article_pk):
   return response
 
 @login_required
-def category_edit(request,id=0):
+def category_edit(request, id):
   if not request.user.is_staff:
     return HttpResponse("无权限操作")
+  a_cate = Category.objects.get(id=id)
   if request.method == 'POST':
-    form = CategoryForm(request.POST,request.FILES)
+    form = CategoryForm(request.POST,request.FILES,instance=a_cate)
     if form.is_valid():
-      if id > 0:
-        form_cd = form.cleaned_data
-        category = Category.objects.get(id=id)
-        category.name = form_cd['name']
-        category.bio = form_cd['bio']
-      else:
-        category = form.save(commit=False)
+      form_cd = form.cleaned_data
+      a_cate.name = form_cd['name']
+      a_cate.bio = form_cd['bio']
+      a_cate.article_content = form_cd['article_content']
       if 'emblem' in request.FILES:
-        category.emblem = form.cleaned_data['emblem']
-      category.save()
-      return index(request)
+        a_cate.emblem = form.cleaned_data['emblem']
+      a_cate.save()
+      return redirect("article:category",a_cate.slug)
     else:
       return HttpResponse(form.errors)
   else:
-    if id > 0:
-      category = Category.objects.get(id=id)
-      form = CategoryForm(instance=category)
-    else:
-      form = CategoryForm()
+    form = CategoryForm(instance=a_cate)
 
   return render(request, 'article/category_edit.html', {'form':form})
 

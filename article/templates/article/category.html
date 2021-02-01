@@ -7,72 +7,17 @@
 {% block body_block %}
   <div class="container">
 	{% if category %}
-		<h3>{{ category.name }}</h3> 
+		<h4 class="mt-4">{{ category.name }}</h4> 
     <div class="row">
-      <div class="col-sm-12 col-md-9">
-		    {% for article in article_page.object_list %}
-          <div class="col-12 mb-9">
-            <div class="card h-100">
-              <!-- 标题 -->
-              <h4 class="card-header">{{ article.title }}</h4>
-              <!-- 摘要 -->
-              <div class="card-body">
-                <span><i class="fas fa-pen" style="color: yellowgreen;"></i>&nbsp;{{article.author}}&nbsp;&nbsp;</span> 
-                <span><i class="fas fa-clock" style="color: pink;"></i>&nbsp;{{article.updated_at|date:"Y-m-d"}}&nbsp;&nbsp;</span>
-                <span><i class="fas fa-eye" style="color: lightskyblue;"></i>&nbsp;{{ article.read }}&nbsp;&nbsp;</span>
-                <p class="card-text">{{ article.body|striptags|truncatechars:128 }}...</p>
-                <a href="{% url 'article:article_detail' category.slug article.id %}" class="btn btn-primary">阅读本文</a>
-              </div>
-              <!-- 注脚 -->
-              <!-- <div class="card-footer"></div> -->
-            </div>
-          </div>
-          <br>
-		    {% empty %}
-		    	<strong>There are no articles in current category.</strong>
-		    {% endfor %}
-        {# START Page num navigation #}
-        <div aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            {% if article_page.has_previous %}
-              <li class="page-item">
-                <a class="page-link" href="?page={{article_page.previous_page_number}}" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-            {% else %}
-              <li class="page-item disabled">
-                <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-            {% endif %}
-            {% for page_num in page_range %}
-              {% if page_num == article_page.number %}
-                <li class="page-item active"><a class="page-link" href="?page={{page_num}}">{{page_num}}</a></li>
-              {% elif page_num == "..." %}
-                <li class="page-item disabled"><a class="page-link" href="#">{{page_num}}</a></li>
-              {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{page_num}}">{{page_num}}</a></li>
-              {% endif %}
-            {% endfor %}
-            {% if article_page.has_next %}
-              <li class="page-item">
-                <a class="page-link" href="?page={{article_page.next_page_number}}" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            {% else %}
-              <li class="page-item disabled">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-        <p>Found {{articles|length}} articles</p>
-        {# END Page num navigation #}
+      <div class="col-sm-9">
+        <span style="font-size:20px">目录</span>
+        {% if user.is_authenticated and user.is_staff %}
+         &nbsp;(<a href="{% url 'article:category_edit' category.pk %}" class="card-link">编辑</a>)
+        {% endif %}
+        <hr>
+      </div>
+      <div class="col-sm-7">
+        {{category.article_content | safe}}
       </div>
     </div>
 	{% else %}

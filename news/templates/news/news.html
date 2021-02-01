@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load comment_extras %}
+{% load userprofile_extras %}
 
 {% block title %}article{% endblock %}
 
@@ -25,6 +26,7 @@
 					</p>
 					<p> {{ news.md | safe }} </p>
           <br>
+          <p class="text-center">浏览: {{ news.read }},  更新: {{ news.updated_at }}</p>
           <div style="text-align:center;" class="mt-4">
             <button class="btn btn-outline-danger" type="button"
               onclick="validate_is_like( {{ news.id }}, {{ news.likes }} )"
@@ -33,13 +35,19 @@
               <span><i class="fas fa-heart"></i></span>
               <span id="likes_number">{{ news.likes }}</span>
             </button>
-            <button class="btn btn-outline-primary" type="button">
-              <span>浏览</span>
-              <span><i class="fas fa-eye"></i></span>
-              <span id="read_number">{{ news.read }}</span>
+            <button class="btn btn-outline-primary" type="button"
+              onclick="add_favorite()"
+            >
+              <span id="favorite_status">收藏</span>
+              <span><i class="fas fa-star"></i></span>
             </button>
+            <form style="display:none;" id="favorite_form" method="POST">
+                {% csrf_token %}
+                {% get_favorite_form news as favorite_form %}
+                {{ favorite_form.as_p }}
+		            <input class="btn btn-primary" type="submit" name="submit" value="收藏"/>
+            </form>
           </div>
-          <p>更新于 {{ news.updated_at }}</p>
           <br>
           <p>Previous: 
             {% if previous_news %}
@@ -210,6 +218,25 @@
         window.localStorage.clear();
         return false;
       };
+    };
+  </script>
+  <script>
+    // 收藏
+    function add_favorite() {
+      // 用 ajax 向后端发送 post 请求
+      $.ajax({
+        type: 'POST',
+        url: '{% url 'userprofile:add_favorite' %}',
+        data: $("#favorite_form").serialize(),
+        dataType: 'json',
+        success: function(data){
+          if(data['status']=="SUCCESS"){
+            $('span#favorite_status').text("已收藏");
+          } else {
+            layer.msg("收藏失败..过一会儿再试试呗~");
+          }
+        }
+      });
     };
   </script>
 

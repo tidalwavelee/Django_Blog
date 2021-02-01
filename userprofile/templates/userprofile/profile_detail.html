@@ -1,34 +1,136 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load userprofile_extras %}
 
 {% block title %}用户资料{% endblock %}
 
 {% block body_block %}
-  <div class="container">
+  <div class="container bg-light">
     <div class="row">
-      <div class="col-12">
+      <div class="col-3">
+        <div class="card bg-light border-light text-center mt-2" style="width: 80%;">
+          {% if profile.avatar %}
+            <img class="card-img-top" src="{{ profile.avatar.url }}" alt="CAD">
+          {% else %}
+            <img class="card-img-top" src="{% static "image/avatar.png"%}" alt="CAD">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ profile_user.username }}</h5>
+            <p>title: {{ profile.title }} </p>
+            {% if user.is_authenticated and user == profile_user %}
+              <a href="{% url 'userprofile:profile_edit' user.id %}" class="text-muted">编辑</a>
+              <a href="#" onclick="confirm_safe_delete()" class="text-muted">注销</a>
+              <form style="display:none;" id="user_delete" action="{% url 'userprofile:user_delete' user.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">发送</button>
+              </form>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <button class="btn btn-outline-danger mb-0" type="button"
+              onclick="add_following( {{ profile_user.id }} )"
+            >
+              <span id="following_status">关注</span>
+            </button>
+            <button class="btn btn-outline-info mb-0" type="button"
+              onclick="#"
+            >
+              <span>发消息</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-9">
         <br>
-        <div class="col-md-4">用户名: {{ profile_user.username }}</div>
-        <br>
-        {% if profile.avatar %}
-          <div class="col-md-4">头像</div>
-          <img src="{{ profile.avatar.url }}" style="max-width: 20%; border-radius: 15%;" class="col-md-4">
-        {% else %}
-          <h5 class="col-md-4">暂无头像</h5>
-        {% endif %}
-        <br>
-        <div class="col-md-4">职业: {{ profile.title }}</div>
-        <br>
-        <div class="col-md-4">简介: {{ profile.bio }}</div>
-        <br>
-        {% if user.is_authenticated and user == profile_user %}
-          <a href="{% url 'userprofile:profile_edit' user.id %}">编辑</a>
-          <a href="#" onclick="confirm_safe_delete()">注销</a>
-          <form style="display:none;" id="user_delete" action="{% url 'userprofile:user_delete' user.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">发送</button>
-          </form>
-        {% endif %}
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">主页</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">文章</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="favorite-tab" data-toggle="tab" href="#favorite" role="tab" aria-controls="favorite" aria-selected="false">收藏</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="follow-tab" data-toggle="tab" href="#follow" role="tab" aria-controls="follow" aria-selected="false">关注</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="fans-tab" data-toggle="tab" href="#fans" role="tab" aria-controls="fans" aria-selected="false">粉丝</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <br>
+          <p class="card-text">简介{{profile.bio}}</p>
+        </div>
+        <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
+          <br>
+		      {% for article in user_articles %}
+            <p class="alert alert-light">
+              <a href="{% url 'article:article_detail' article.category.slug article.pk %}">{{article.title}}</a>
+            </p>
+		      {% empty %}
+		      	<strong>暂时没有发布文章.</strong>
+		      {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="favorite" role="tabpanel" aria-labelledby="favorite-tab">
+          <br>
+          {% retrieve_favorites profile_user as user_favorites %}
+            <table class="table">
+              <tbody>
+		            {% for favorite in user_favorites %}
+                  {% if favorite.type == "Article" %}
+                  <tr>
+                    <td><a href="{% url 'article:article_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                    <td>{{favorite.author}}</td>
+                    <td>
+                      {% if user.is_authenticated and user == profile_user %}
+                        <a href="#" onclick="del_favorite( {{favorite.favID}} )" class="text-muted">删除</a>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% elif favorite.type == "News" %}
+                  <tr class="table-info">
+                    <td><a href="{% url 'news:news_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                    <td>{{favorite.author}}</td>
+                    <td>
+                      {% if user.is_authenticated and user == profile_user %}
+                        <a href="#" onclick="del_favorite( {{favorite.favID}} )" class="text-muted">删除</a>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endif %}
+		            {% empty %}
+		            	<strong>暂时没有收藏.</strong>
+		            {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="follow" role="tabpanel" aria-labelledby="follow-tab">
+          <br>
+          {% for following_user in profile.get_following %}
+            <p class="alert alert-light">
+              <a href="{% url 'userprofile:profile_detail' following_user.id %}">{{following_user}}</a>
+              {% if user.is_authenticated and user == profile_user %}
+                <a href="#" onclick="unfollow( {{following_user.id}} )" class="text-muted">取消关注</a>
+              {% endif %}
+            </p>
+		      {% empty %}
+		      	<strong>暂时没有关注任何人</strong>
+		      {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="fans" role="tabpanel" aria-labelledby="fans-tab">
+          <br>
+          {% for followed_user in profile.get_followed %}
+            <p class="alert alert-light">
+              <a href="{% url 'userprofile:profile_detail' followed_user.id %}">{{followed_user}}</a>
+            </p>
+		      {% empty %}
+		      	<strong>暂时没有被关注</strong>
+		      {% endfor %}
+        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -46,5 +148,65 @@
                },
       })
     }
+  </script>
+
+  <script>
+    // 关注功能主函数
+    function add_following(id) {
+      // 用 ajax 向后端发送 post 请求
+      $.ajax({
+        type: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        url: '{% url 'userprofile:set_following' %}',
+        data: {'userID': id},
+        success: function(data,status,xhr){
+          if (status == 'success') {
+            // 更改关注状态
+            $('span#following_status').text("已关注");
+          } else {
+            layer.msg("关注失败..过一会儿再试试呗~");
+          }
+        },
+        error: function(xhr){
+          alert(xhr.status + ": 关注失败, 谨慎自恋");
+        }
+      });
+    };
+
+    // 取关功能主函数
+    function unfollow(id) {
+      // 用 ajax 向后端发送 post 请求
+      $.ajax({
+        type: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        url: '{% url 'userprofile:unfollow' %}',
+        data: {'followingID': id},
+        success: function(data,status,xhr){
+          if (status == 'success') {
+            layer.msg("已取关..网页刷新后生效");
+          } else {
+            layer.msg("取关失败..过一会儿再试试呗~");
+          }
+        }
+      });
+    };
+
+    // 删除收藏
+    function del_favorite(id) {
+      // 用 ajax 向后端发送 post 请求
+      $.ajax({
+        type: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        url: '{% url 'userprofile:del_favorite' %}',
+        data: {'favID': id},
+        success: function(data,status,xhr){
+          if (status == 'success') {
+            layer.msg("已删除..网页刷新后生效");
+          } else {
+            layer.msg("删除失败..过一会儿再试试呗~");
+          }
+        }
+      });
+    };
   </script>
 {% endblock %}

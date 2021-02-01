@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.simple_tag
 def retrieve_comments(obj):
-  obj_content_type = ContentType.objects.get_for_model(obj) 
+  obj_content_type = ContentType.objects.get_for_model(obj)
   comments = Comment.objects.filter(content_type=obj_content_type, object_id=obj.pk)
   return comments
 

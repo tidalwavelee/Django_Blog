@@ -20,7 +20,6 @@ app_name = 'article'
 urlpatterns = [
     path('', views.index, name='index'),
     path('increase_likes/', views.increase_likes, name='increase_likes'),
-    path('category_edit/', views.category_edit, name='category_edit'),
     path('category_edit/<int:id>', views.category_edit, name='category_edit'),
     path('article_edit/', views.article_edit, name='article_edit'),
     path('article_edit/<int:id>/', views.article_edit, name='article_edit'),

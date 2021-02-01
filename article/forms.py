@@ -5,12 +5,17 @@ from mdeditor.fields import MDTextFormField
 import datetime
 
 class CategoryForm(forms.ModelForm):
-    article_number = forms.IntegerField(widget=forms.HiddenInput(),initial=0,required=False)
     slug = forms.CharField(widget=forms.HiddenInput(),required=False)
 
     class Meta:
-        model = Category
-        fields = ('emblem','name','bio',)
+      model = Category
+      fields = ('emblem','name','bio','article_content',)
+      labels = {
+          "emblem": _("版徽"),
+          "name": _("版面名"),
+          "bio": _("简介"),
+          "article_content": _("文章目录"),
+        }
 
 class ArticleForm(forms.ModelForm):
   class Meta:

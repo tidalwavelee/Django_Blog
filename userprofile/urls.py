@@ -21,4 +21,8 @@ urlpatterns = [
     path('user_delete/<int:id>/', views.user_delete, name='user_delete'),
     path('profile_detail/<int:id>/', views.profile_detail, name='profile_detail'),
     path('profile_edit/<int:id>/', views.profile_edit, name='profile_edit'),
+    path('set_following/', views.set_following, name='set_following'),
+    path('unfollow/', views.unfollow, name='unfollow'),
+    path('add_favorite/', views.add_favorite, name='add_favorite'),
+    path('del_favorite/', views.del_favorite, name='del_favorite'),
 ]

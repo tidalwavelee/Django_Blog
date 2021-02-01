@@ -17,9 +17,6 @@
           </div>
           <div class="card-body">
             <a href="{% url 'article:category' category.slug %}" class="card-link">进入版面</a>
-            {% if user.is_authenticated and user.is_staff %}
-              <a href="{% url 'article:category_edit' category.id %}" class="card-link">编辑版面</a>
-            {% endif %}
           </div>
         </div>
       </div>

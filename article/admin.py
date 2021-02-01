@@ -6,7 +6,7 @@ from article.models import Category,Article
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
 #    prepopulated_fields = {'slug':('name',)}
-    list_display = ('name','article_number','slug')
+    list_display = ('id', 'name','slug')
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
