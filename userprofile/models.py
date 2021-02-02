@@ -17,14 +17,16 @@ class Profile(models.Model):
     '''关注的人'''
     user_list = []
     for followed_user in self.user.following.all():
-      user_list.append(followed_user.followed)
+      user_profile = Profile.objects.get(user=followed_user.followed)
+      user_list.append(user_profile)
     return user_list
 
   def get_followed(self):
     '''粉丝'''
     user_list = []
     for following_user in self.user.followed.all():
-      user_list.append(following_user.following)
+      user_profile = Profile.objects.get(user=following_user.following)
+      user_list.append(user_profile)
     return user_list
 
 class FollowRelation(models.Model):

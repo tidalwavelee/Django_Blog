@@ -47,7 +47,7 @@
           <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">主页</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">文章</a>
+          <a class="nav-link" id="post-tab" data-toggle="tab" href="#post" role="tab" aria-controls="post" aria-selected="false">发布</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="favorite-tab" data-toggle="tab" href="#favorite" role="tab" aria-controls="favorite" aria-selected="false">收藏</a>
@@ -64,15 +64,49 @@
           <br>
           <p class="card-text">简介{{profile.bio}}</p>
         </div>
-        <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
+        <div class="tab-pane fade" id="post" role="tabpanel" aria-labelledby="post-tab">
           <br>
-		      {% for article in user_articles %}
-            <p class="alert alert-light">
-              <a href="{% url 'article:article_detail' article.category.slug article.pk %}">{{article.title}}</a>
-            </p>
-		      {% empty %}
-		      	<strong>暂时没有发布文章.</strong>
-		      {% endfor %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ARTICLE</th>
+              </tr>
+            </thead>
+            <tbody>
+		          {% for article in user_articles %}
+                <tr>
+                  <td>{{article.category}}</td>
+                  <td><a href="{% url 'article:article_detail' article.category.slug article.pk %}">{{article.title}}</a></td>
+                  <td>{{article.created_at}}</td>
+                </tr>
+		          {% empty %}
+                <tr>
+		              <td><strong>暂时没有发布文章.</strong></td>
+                </tr>
+		          {% endfor %}
+            </tbody>
+          </table>
+          <br>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>INFO</th>
+              </tr>
+            </thead>
+            <tbody>
+		          {% for news in user_newss %}
+                <tr>
+                  <td>{{news.category}}</td>
+                  <td><a href="{% url 'news:news_detail' news.category.slug news.pk %}">{{news.title}}</a></td>
+                  <td>{{news.created_at}}</td>
+                </tr>
+		          {% empty %}
+                <tr>
+		              <td><strong>暂时没有发布资讯.</strong></td>
+                </tr>
+		          {% endfor %}
+            </tbody>
+          </table>
         </div>
         <div class="tab-pane fade" id="favorite" role="tabpanel" aria-labelledby="favorite-tab">
           <br>
@@ -80,9 +114,13 @@
             <table class="table">
               <tbody>
 		            {% for favorite in user_favorites %}
-                  {% if favorite.type == "Article" %}
                   <tr>
-                    <td><a href="{% url 'article:article_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                    <td>{{favorite.type}}</td>
+                    {% if favorite.type == "Article" %}
+                      <td><a href="{% url 'article:article_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                    {% elif favorite.type == "News" %}
+                      <td><a href="{% url 'news:news_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                    {% endif %}
                     <td>{{favorite.author}}</td>
                     <td>
                       {% if user.is_authenticated and user == profile_user %}
@@ -90,17 +128,6 @@
                       {% endif %}
                     </td>
                   </tr>
-                  {% elif favorite.type == "News" %}
-                  <tr class="table-info">
-                    <td><a href="{% url 'news:news_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
-                    <td>{{favorite.author}}</td>
-                    <td>
-                      {% if user.is_authenticated and user == profile_user %}
-                        <a href="#" onclick="del_favorite( {{favorite.favID}} )" class="text-muted">删除</a>
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endif %}
 		            {% empty %}
 		            	<strong>暂时没有收藏.</strong>
 		            {% endfor %}
@@ -110,12 +137,16 @@
         <div class="tab-pane fade" id="follow" role="tabpanel" aria-labelledby="follow-tab">
           <br>
           {% for following_user in profile.get_following %}
-            <p class="alert alert-light">
-              <a href="{% url 'userprofile:profile_detail' following_user.id %}">{{following_user}}</a>
-              {% if user.is_authenticated and user == profile_user %}
-                <a href="#" onclick="unfollow( {{following_user.id}} )" class="text-muted">取消关注</a>
-              {% endif %}
-            </p>
+            <div class="media border p-2">
+              <img src="img_avatar3.png" alt="USER" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+              <div class="media-body">
+                <h4><a href="{% url 'userprofile:profile_detail' following_user.user.id %}">{{following_user.user}}</a></h4>
+                <p>{{following_user.bio}}</p>
+                {% if user.is_authenticated and user == profile_user %}
+                  <a href="#" onclick="unfollow( {{following_user.user.id}} )" class="text-muted">取消关注</a>
+                {% endif %}
+              </div>
+            </div>
 		      {% empty %}
 		      	<strong>暂时没有关注任何人</strong>
 		      {% endfor %}
@@ -123,9 +154,13 @@
         <div class="tab-pane fade" id="fans" role="tabpanel" aria-labelledby="fans-tab">
           <br>
           {% for followed_user in profile.get_followed %}
-            <p class="alert alert-light">
-              <a href="{% url 'userprofile:profile_detail' followed_user.id %}">{{followed_user}}</a>
-            </p>
+            <div class="media border p-2">
+              <img src="img_avatar3.png" alt="USER" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+              <div class="media-body">
+                <h4><a href="{% url 'userprofile:profile_detail' followed_user.user.id %}">{{followed_user.user}}</a></h4>
+                <p>{{followed_user.bio}}</p>
+              </div>
+            </div>
 		      {% empty %}
 		      	<strong>暂时没有被关注</strong>
 		      {% endfor %}
