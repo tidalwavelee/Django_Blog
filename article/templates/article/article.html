@@ -25,7 +25,7 @@
             {% endif %}
 					</p>
 					<p> {{ article.md | safe }} </p>
-          <br>
+          <hr>
           <p class="text-center">浏览: {{ article.read }},  更新: {{ article.updated_at }}</p>
           <div style="text-align:center;" class="mt-4">
             <button class="btn btn-outline-danger" type="button"
@@ -48,21 +48,18 @@
 		            <input class="btn btn-primary" type="submit" name="submit" value="收藏"/>
             </form>
           </div>
-          <br>
-          <p>Previous: 
-            {% if previous_article %}
-              <a href="{% url 'article:article_detail' article.category.slug previous_article.pk %}">{{previous_article.title}}</a>
-            {% else %}
-              None
-            {% endif %}
-          </p>
-          <p>Next:
-            {% if next_article %}
-               <a href="{% url 'article:article_detail' article.category.slug next_article.pk %}">{{next_article.title}}</a>
-            {% else %}
-              Next: None
-            {% endif %}
-          </p>
+          <div class="row justify-content-end">
+          {% if previous_article %}
+            <div class="col-auto mr-auto">
+              <a href="{% url 'article:article_detail' article.category.slug previous_article.pk %}" class="btn btn-outline-info">{{previous_article.title}}</a>
+            </div>
+          {% endif %}
+          {% if next_article %}
+            <div class="col-auto">
+              <a href="{% url 'article:article_detail' article.category.slug next_article.pk %}" class="btn btn-outline-info">{{next_article.title}}</a>
+            </div>
+          {% endif %}
+			    </div>
 			  </div>
         <div class="col-2">
           <h4>目录</h4>
