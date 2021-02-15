@@ -86,27 +86,6 @@
 		          {% endfor %}
             </tbody>
           </table>
-          <br>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>INFO</th>
-              </tr>
-            </thead>
-            <tbody>
-		          {% for news in user_newss %}
-                <tr>
-                  <td>{{news.category}}</td>
-                  <td><a href="{% url 'news:news_detail' news.category.slug news.pk %}">{{news.title}}</a></td>
-                  <td>{{news.created_at}}</td>
-                </tr>
-		          {% empty %}
-                <tr>
-		              <td><strong>暂时没有发布资讯.</strong></td>
-                </tr>
-		          {% endfor %}
-            </tbody>
-          </table>
         </div>
         <div class="tab-pane fade" id="favorite" role="tabpanel" aria-labelledby="favorite-tab">
           <br>
@@ -119,7 +98,7 @@
                     {% if favorite.type == "Article" %}
                       <td><a href="{% url 'article:article_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
                     {% elif favorite.type == "News" %}
-                      <td><a href="{% url 'news:news_detail' favorite.category.slug favorite.id %}">{{favorite.title}}</a></td>
+                      <td>need updates</td>
                     {% endif %}
                     <td>{{favorite.author}}</td>
                     <td>

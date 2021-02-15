@@ -26,7 +26,6 @@ urlpatterns = [
     path('userprofile/', include('userprofile.urls')),
     path('about/', views.about, name="about"),
     path('article/', include('article.urls')),
-    path('news/', include('news.urls')),
     path('comment/', include('comment.urls')),
     path('accounts/', include('registration.backends.default.urls')),
     path('mdeditor/', include('mdeditor.urls')),

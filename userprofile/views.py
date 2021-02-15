@@ -7,7 +7,6 @@ from django.http import HttpResponse, JsonResponse
 from userprofile.models import Profile, FollowRelation, Favorite
 from userprofile.forms import ProfileForm, FavoriteForm
 from article.models import Article
-from news.models import News
 
 def profile_detail(request, id):
   page_num = request.GET.get('page',1)
@@ -21,9 +20,6 @@ def profile_detail(request, id):
   # 用户文章
   user_articles = Article.objects.filter(author=profile_user)
   context['user_articles'] = user_articles
-  # 用户资讯
-  user_newss = News.objects.filter(author=profile_user)
-  context['user_newss'] = user_newss
 
   return render(request, 'userprofile/profile_detail.html', context)
 
