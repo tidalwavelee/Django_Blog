@@ -31,6 +31,7 @@ urlpatterns = [
     path('mdeditor/', include('mdeditor.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     path('notice/', include('notice.urls')),
+    path('guide/', include('guide.urls')),
 ]
 
 if settings.DEBUG:

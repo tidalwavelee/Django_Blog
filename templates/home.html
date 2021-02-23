@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+{% endblock head %}
+
 {% block title %}Home{% endblock %}
 
 {% block body_block %}
@@ -53,48 +57,17 @@
     </a>
   </div>
 
-	<div class="container-fluid">
 
-		<div class="row card-title">
-			<div class="col-sm-12">
-				<h2>Join Us As</h2>
-			</div>
-		</div>
-
-		<div class="row card-deck">
-			<div class="card bg-info">
-				<img class="card-img-top" src="#" alt="Card image primary">
-				<div class="card-body">
-					<strong class="card-title text-dark">News Chaser</strong>
-					<p class="card-text"> some description.</p>
-					<a href="#" class="btn btn-primary">Details</a>
-				</div>
-			</div>
-			<div class="card bg-warning">
-				<img class="card-img-top" src="#" alt="Card image warning">
-				<div class="card-body">
-					<strong class="card-title text-dark">Article Writer</strong>
-					<p class="card-text"> some description.</p>
-					<a href="#" class="btn btn-primary">Details</a>
-				</div>
-			</div>
-			<div class="card bg-success">
-				<img class="card-img-top" src="#" alt="Card image success">
-				<div class="card-body">
-					<strong class="card-title text-dark">Document Manager</strong>
-					<p class="card-text"> some description.</p>
-					<a href="#" class="btn btn-primary">Details</a>
-				</div>
-			</div>
-			<div class="card bg-danger">
-				<img class="card-img-top" src="#" alt="Card image danger">
-				<div class="card-body">
-					<strong class="card-title text-dark">Project Contributor</strong>
-					<p class="card-text"> some description.</p>
-					<a href="#" class="btn btn-primary">Details</a>
-				</div>
-			</div>
-		</div>
-
-	</div>
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Album example</h1>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+        <p>
+          <a href="#" class="btn btn-primary my-2">Main call to action</a>
+          <a href="#" class="btn btn-secondary my-2">Secondary action</a>
+        </p>
+      </div>
+    </div>
+  </section> 
 {% endblock %}

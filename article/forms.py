@@ -19,10 +19,10 @@ class CategoryForm(forms.ModelForm):
 
 class ArticleForm(forms.ModelForm):
   class Meta:
-      model = Article
-      fields = ('title','category','body',)
-      labels = {
-          "title": _("文章标题"),
-          "category": _("文章分类"),
-          "body": _("文章正文"),
-        }
+    model = Article
+    fields = ('title','category','body',)
+    labels = {
+        "title": _("文章标题"),
+        "category": _("文章分类"),
+        "body": _("文章正文"),
+      }

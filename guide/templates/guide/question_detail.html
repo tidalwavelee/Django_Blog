@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load i18n static humanize %}
+
+{% block title %}{{ question.title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/guide.css' %}">
+{% endblock %}
+
+{% block body_block %}
+  <div class="container">
+    <div class="page-header">
+      <a href="{% url 'guide:ask_question' %}" class="btn btn-primary float-right">
+        <i class="fa fa-pencil" aria-hidden="true"></i> {% trans "Ask a Question" %}
+      </a>
+      <h1>{{ question.title }}</h1>
+    </div>
+    <div class="row question" question-id="{{ question.id }}">
+      <div class="col-md-1">
+        <div class="question-info options">
+          <h3 class="{% if question.has_answer %}bg-success text-white{% endif %}">{{ question.count_answers }}</h3>
+          <small class="text-secondary">{% trans 'Answers' %}</small>
+          <i id="questionUpVote" class="fa fa-chevron-up {% if is_question_owner %} is-owner {% else %} vote {% endif %} up-vote question-vote{% if request.user in question.get_upvoters %} voted{% endif %}" aria-hidden="true" title="{% trans 'Click to up vote; click again to toggle' %}"></i>
+          <h3 id="questionVotes">{{ question.total_votes }}</h3>
+          <i id="questionDownVote" class="fa fa-chevron-down {% if is_question_owner %} is-owner {% else %} vote {% endif %} down-vote question-vote{% if request.user in question.get_downvoters %} voted{% endif %}" aria-hidden="true" title="{% trans 'Click to down vote; click again to toggle' %}"></i>
+          <small class="text-secondary">{% trans 'Votes' %}</small>
+        </div>
+      </div>
+      <div class="col-md-11">
+        <p>{{ question.content|safe }}</p>
+        <div class="question-user float-right">
+          <span class="text-secondary">{% trans 'Asked' %} {{ question.created_at|naturaltime }} {% trans 'by' %}</span>
+          <a href="{% url 'userprofile:profile_detail' question.user.id  %}">{{ question.user.username }}</a>
+          {% if question.tags.names %}
+            <p>
+              {% for tag in question.tags.names %}
+                <span class="badge badge-primary">{{ tag }}</span>
+              {% endfor %}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+        <a href="{% url 'guide:propose_answer' question.id %}" class="btn btn-primary float-right" role="button">{% trans "Submit an answer" %}</a>
+    </div>
+    <div class="page-header">
+      <h1>{% trans 'Answers' %}</h1>
+    </div>
+    <div class="row">
+      <ul class="col-md-12">
+        {% for answer in question.answer_set.all %}
+          {% include 'guide/answer_sample.html' with answer=answer username=request.user.username %}
+        {% empty %}
+          <div class="text-center">
+            <h4>{% trans 'There are no answers yet.' %}</h4>
+            <p>{% trans 'Submit your answer now.' %}</p>
+          </div>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block javascript %}
+  <script src="{% static 'js/guide.js' %}" type="text/javascript"></script>
+{% endblock %}

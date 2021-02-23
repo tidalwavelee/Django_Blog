@@ -58,24 +58,3 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 3rem;
   }
 }
-
-/*
- * card deck section in home page
- */
-.card-deck {
-  margin-bottom: 3rem;
-}
-.card-title {
-  text-align: center;
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-}
-/*
- * Footer
- */
-.page-footer {
-  padding: 2.5rem 0;
-  color: #999;
-  text-align: center;
-  background-color: #f9f9f9;
-  border-top: .05rem solid #e5e5e5;
-}

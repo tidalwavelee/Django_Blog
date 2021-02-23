@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Questions" %}{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/guide.css' %}">
+{% endblock %}
+
+{% block body_block %}
+<div class="container">
+  <div class="page-header">
+    <a href="{% url 'guide:ask_question' %}" class="btn btn-primary float-right">
+      <i class="fas fa-pencil" aria-hidden="true"></i> {% trans "Ask a Question" %}
+    </a>
+    <h2>{% trans "Questions" %}</h2>
+  </div>
+  <div class="card my-4">
+    <h5 class="card-header">{% trans 'Questions by topic' %}</h5>
+    <div class="card-body">
+      {% for tag, count in popular_tags %}
+        <a href="#"><span class="badge badge-info">{{ count }} {{ tag }}</span></a>
+      {% endfor %}
+    </div>
+  </div>
+  <div>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'guide:index_noans' %}">
+          {% trans "Unanswered" %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'guide:index_ans' %}">
+          {% trans "Answered" %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'guide:index_all' %}">
+          {% trans "All Questions" %}
+        </a>
+      </li>
+    </ul>
+    {% for question in questions %}
+      {% include 'guide/question_sample.html' with question=question %}
+    {% empty %}
+      <h4 class="no-data">{% trans "No question to display" %}</h4>
+    {% endfor %}
+
+    {% if is_paginated %}
+      <ul class="pagination justify-content-center mb-4">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; {% trans 'Newer' %}</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#"><span>&larr;</span></a></li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+          {% if page_obj.number == i %}
+            <li class="page-item disabled"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans 'Older' %} &rarr;</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#"><span>&rarr;</span></a></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+
+{% block javescript %}
+  <script src="{% static 'js/guide.js' %}"></script>
+{% endblock %}

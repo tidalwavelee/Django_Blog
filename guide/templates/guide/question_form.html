@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans 'Ask a question' %}{% endblock %}
+
+{% block body_block %}
+<div class="container">
+  <form action="{% url 'guide:ask_question' %}" enctype="multipart/form-data"  id="question-form" method="post" role="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-group">
+      <button id="publish" type="button" class="btn btn-primary">{% trans 'Publish' %}</button>
+      <button id="draft" type="button" class="btn btn-default">{% trans 'Save as draft' %}</button>
+      <a href="{% url 'guide:index_all' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+    </div>
+  </form>
+  {{ form.media }}
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/guide.js' %}"></script>
+{% endblock %}
