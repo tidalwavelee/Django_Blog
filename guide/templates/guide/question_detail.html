@@ -10,13 +10,14 @@
 {% block body_block %}
   <div class="container">
     <div class="page-header">
+      <br>
       <a href="{% url 'guide:ask_question' %}" class="btn btn-primary float-right">
         <i class="fa fa-pencil" aria-hidden="true"></i> {% trans "Ask a Question" %}
       </a>
-      <h1>{{ question.title }}</h1>
+      <h3>{{ question.title }}</h3>
     </div>
     <div class="row question" question-id="{{ question.id }}">
-      <div class="col-md-1">
+      <div class="col-1">
         <div class="question-info options">
           <h3 class="{% if question.has_answer %}bg-success text-white{% endif %}">{{ question.count_answers }}</h3>
           <small class="text-secondary">{% trans 'Answers' %}</small>
@@ -26,7 +27,8 @@
           <small class="text-secondary">{% trans 'Votes' %}</small>
         </div>
       </div>
-      <div class="col-md-11">
+      <div class="col-11">
+        <br>
         <p>{{ question.content|safe }}</p>
         <div class="question-user float-right">
           <span class="text-secondary">{% trans 'Asked' %} {{ question.created_at|naturaltime }} {% trans 'by' %}</span>
@@ -40,10 +42,12 @@
           {% endif %}
         </div>
       </div>
-        <a href="{% url 'guide:propose_answer' question.id %}" class="btn btn-primary float-right" role="button">{% trans "Submit an answer" %}</a>
+      <div class="col-12">
+      <a href="{% url 'guide:propose_answer' question.id %}" class="btn btn-primary float-right" role="button">{% trans "Submit an answer" %}</a>
+      </div>
     </div>
     <div class="page-header">
-      <h1>{% trans 'Answers' %}</h1>
+      <h3>{% trans 'Answers' %}</h3>
     </div>
     <div class="row">
       <ul class="col-md-12">

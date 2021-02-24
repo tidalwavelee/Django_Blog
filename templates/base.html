@@ -14,6 +14,7 @@
     <!-- jQuery first then Popper.js, then Bootstrap JS -->
     <script src="{% static 'jquery.min.js' %}"></script>
 		<script src="{% static 'bootstrap-4.5/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 		<title>OpenCAD {% block title %}{% endblock %}</title>
     {% block head %}{% endblock head %}
   </head>
@@ -34,18 +35,6 @@
     {% block javascript %}{% endblock %}
 
 		{% include 'footer.html' %}
-
-    <style>
-      #wrapper {
-           min-height: 100%;
-           margin-bottom: -60px;
-      }
-      
-      #footer,
-      #push {
-           height: 60px;
-      }
-    </style>
 
   </body>
 
