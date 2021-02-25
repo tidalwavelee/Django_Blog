@@ -29,7 +29,7 @@
       </div>
       <div class="col-11">
         <br>
-        <p>{{ question.content|safe }}</p>
+        <p>{{ question.get_markdown|safe }}</p>
         <div class="question-user float-right">
           <span class="text-secondary">{% trans 'Asked' %} {{ question.created_at|naturaltime }} {% trans 'by' %}</span>
           <a href="{% url 'userprofile:profile_detail' question.user.id  %}">{{ question.user.username }}</a>

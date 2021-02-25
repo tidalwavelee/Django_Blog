@@ -21,7 +21,7 @@
       <small class="answered">{% trans "answered" %} {{ answer.created_at|naturaltime }}</small>
     </div>
     <div class="answer-description">
-      {{ answer|safe }}
+      {{ answer.get_markdown|safe }}
     </div>
   </div>
 </div>

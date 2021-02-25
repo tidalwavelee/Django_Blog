@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 from mdeditor.fields import MDTextField
+import markdown
 
 class Vote(models.Model):
   uuid_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
@@ -85,6 +86,14 @@ class Question(models.Model):
     return Answer.objects.filter(question=self)
   def get_accepted_answer(self):
     return Answer.objects.get(question=self, is_answer=True)
+  def get_markdown(self):
+    md = markdown.Markdown(
+           extensions=['markdown.extensions.extra',
+                       'markdown.extensions.codehilite',
+                       'markdown.extensions.toc']
+         )
+    return md.convert(self.content)
+
 
 class Answer(models.Model):
   question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -102,6 +111,14 @@ class Answer(models.Model):
     verbose_name_plural = _("Answers")
   def __str__(self):
     return self.content
+
+  def get_markdown(self):
+    md = markdown.Markdown(
+           extensions=['markdown.extensions.extra',
+                       'markdown.extensions.codehilite',
+                       'markdown.extensions.toc']
+         )
+    return md.convert(self.content)
 
   def count_votes(self):
     """Method to update the sum of the total votes. Uses this complex query
