@@ -21,7 +21,7 @@ def update_votes(obj, user, value):
   )
   obj.count_votes()
 
-class QuestionsIndexListView(LoginRequiredMixin, ListView):
+class QuestionsIndexListView(ListView):
   model = Question
   paginate_by = 20
   context_object_name = "questions"
@@ -47,7 +47,7 @@ class QuestionListView(QuestionsIndexListView):
     context["active"] = "unanswered"
     return context
 
-class QuestionDetailView(LoginRequiredMixin, DetailView):
+class QuestionDetailView(DetailView):
   model = Question
   context_object_name = "question"
   def get_context_data(self, *args, **kwargs):
