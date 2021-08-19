@@ -32,6 +32,7 @@ urlpatterns = [
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     path('notice/', include('notice.urls')),
     path('guide/', include('guide.urls')),
+#    path('event/', include('event.urls')),
 ]
 
 if settings.DEBUG:
