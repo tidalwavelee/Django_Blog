@@ -1,0 +1,27 @@
+{% load i18n static humanize %}
+
+<div class="card events">
+  <div class="card-body">
+    <div class="event-info pull-left text-center">
+      <h3>{{ event.total_votes }}</h3>
+      <small class="text-secondary">{% trans 'Votes' %}</small>
+    </div>
+    <div>
+      <h4 class="card-title">
+        <a href="{% url 'event:event_detail' event.pk %}">{{ event.title }}</a>
+      </h4>
+      <p class="mb-0">{{ event.get_markdown|safe|truncatechars:100 }}</p>
+      <div class="event-user float-right">
+        <span class="text-secondary">{% trans 'Posted' %} {{ event.created_at|naturaltime }} {% trans 'by' %}</span>
+        <a href="{% url 'userprofile:profile_detail' event.user.id %}">{{ event.user }}</a>
+        {% if event.tags.names %}
+          <p style="position: absolute; bottom: 0;">
+            {% for tag in event.tags.names %}
+              <span class="badge badge-primary">{{ tag }}</span>
+            {% endfor %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

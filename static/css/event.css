@@ -1,0 +1,133 @@
+.events {
+  border-style: none none solid none;
+}
+
+.events .pagination {
+  margin: 0;
+}
+
+.events .user {
+  width: 25px;
+  border-radius: 3px;
+}
+
+.events .asked {
+  color: #aaaaaa;
+  font-size: .8em;
+}
+
+.events .username {
+  margin-left: .3em;
+  font-weight: 500;
+  font-size: 0.8em;
+}
+
+.events .panel-body:hover {
+  background-color: #f5f8fa;
+  cursor: pointer;
+}
+
+.events .event-user {
+  margin-bottom: .6em;
+}
+
+.options {
+  text-align: center;
+
+}
+
+.options i {
+  display: block;
+  font-size: 1.2em;
+}
+
+.options i.favorite {
+  font-size: 2em;
+  margin-top: .4em;
+}
+
+.options i.vote, .options i.is-owner {
+  font-size: 2em;
+  color: #ddd;
+}
+
+.options i.vote:hover {
+  cursor: pointer;
+  color: #428bca;
+}
+
+.options i.voted {
+  color:#ffa700;
+}
+
+.options i.accept {
+  font-size: 2.6em;
+  color: #dddddd;
+  margin-top: .2em;
+}
+
+.options i.accept:hover {
+  cursor: pointer;
+  color: #5cb85c;
+}
+
+.options i.accepted {
+  color: #5cb85c;
+}
+
+.event .event-user {
+  margin-bottom: .6em;
+}
+
+.event .event-user .user {
+  width: 40px;
+  border-radius: 5px;
+}
+
+.event .event-user .username {
+  margin-left: .4em;
+}
+
+.event .asked {
+  color: #aaaaaa;
+  margin-left: .6em;
+}
+
+.favorite {
+  cursor: pointer;
+}
+
+.favorite:hover {
+  color: #f0ad4e;
+}
+
+.favorited {
+  color: #f0ad4e;
+}
+
+.event-info {
+  text-align: center;
+  float: left;
+  padding: 0 1em;
+}
+
+.event-title {
+  margin-top: 10px;
+}
+
+.event-info h5 {
+  margin: 0;
+  margin-bottom: .2em;
+}
+
+.event-info .info:first-child {
+  margin-bottom: 1.2em;
+}
+
+.event-info .info:nth-child(2) {
+  margin-bottom: 1.2em;
+}
+
+.glyphicon-star-empty {
+  font-size: 1em;
+}

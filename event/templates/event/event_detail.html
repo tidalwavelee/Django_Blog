@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n static humanize %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/event.css' %}">
+{% endblock %}
+
+{% block body_block %}
+  <div class="container">
+    <div class="page-header">
+      <br>
+      <a href="{% url 'event:post_event' %}" class="btn btn-primary float-right">
+        <i class="fa fa-pencil" aria-hidden="true"></i> {% trans "Post an Event" %}
+      </a>
+      <h3>{{ event.title }}</h3>
+    </div>
+    <div class="row event" event-id="{{ event.id }}">
+      <div class="col-1">
+        <div class="event-info options">
+          <i id="eventUpVote" class="fa fa-chevron-up {% if is_event_owner %} is-owner {% else %} vote {% endif %} up-vote event-vote{% if request.user in event.get_upvoters %} voted{% endif %}" aria-hidden="true" title="{% trans 'Click to up vote; click again to toggle' %}"></i>
+          <h3 id="eventVotes">{{ event.total_votes }}</h3>
+          <i id="eventDownVote" class="fa fa-chevron-down {% if is_event_owner %} is-owner {% else %} vote {% endif %} down-vote event-vote{% if request.user in event.get_downvoters %} voted{% endif %}" aria-hidden="true" title="{% trans 'Click to down vote; click again to toggle' %}"></i>
+          <small class="text-secondary">{% trans 'Votes' %}</small>
+        </div>
+      </div>
+      <div class="col-11">
+        <br>
+        <p>{{ event.get_markdown|safe }}</p>
+        <div class="event-user float-right">
+          <span class="text-secondary">{% trans 'Posted' %} {{ event.created_at|naturaltime }} {% trans 'by' %}</span>
+          <a href="{% url 'userprofile:profile_detail' event.user.id  %}">{{ event.user.username }}</a>
+          {% if event.tags.names %}
+            <p>
+              {% for tag in event.tags.names %}
+                <span class="badge badge-primary">{{ tag }}</span>
+              {% endfor %}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block javascript %}
+  <script src="{% static 'js/event.js' %}" type="text/javascript"></script>
+{% endblock %}

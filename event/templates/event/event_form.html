@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans 'Post an Event' %}{% endblock %}
+
+{% block body_block %}
+<div class="container">
+  <form action="{% url 'event:post_event' %}" enctype="multipart/form-data"  id="event-form" method="post" role="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-group">
+      <button id="publish" type="button" class="btn btn-primary">{% trans 'Publish' %}</button>
+      <button id="draft" type="button" class="btn btn-default">{% trans 'Save as draft' %}</button>
+      <a href="{% url 'event:index_all' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+    </div>
+  </form>
+  {{ form.media }}
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/event.js' %}"></script>
+{% endblock %}
